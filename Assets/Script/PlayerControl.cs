@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using DG.Tweening;
 public class PlayerControl : MonoBehaviour
 {
     public float speed = 2;
@@ -13,6 +14,9 @@ public class PlayerControl : MonoBehaviour
 
     public float camSpeed = 9.0f; // 화면이 움직이는 속도 변수
     float pitch = 0;
+    public Transform child;
+    public Transform dir;
+    float angle = 0;
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -36,7 +40,7 @@ public class PlayerControl : MonoBehaviour
         if (rigid.useGravity == false)
         {
             pitch = -camSpeed * Input.GetAxis("Mouse Y"); // 마우스y값을 지속적으로 받을 변수
-            rigid.AddRelativeTorque(Vector3.right * pitch);
+            rigid.AddTorque(dir.right * pitch);
         }
     }
 
@@ -46,23 +50,25 @@ public class PlayerControl : MonoBehaviour
         {
             rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 90);
         }
-        if (Input.GetKeyDown(KeyCode.A))
+
+
+        if (Input.GetKey(KeyCode.D))
         {
-            SetAngle(-90);
+            angle = Mathf.Lerp(angle, -100, Time.deltaTime * 5);
         }
-        else if (Input.GetKeyUp(KeyCode.A))
+        else if (Input.GetKey(KeyCode.A))
         {
-            SetAngle(0);
+            angle = Mathf.Lerp(angle, 100, Time.deltaTime * 5);
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        else
         {
-            SetAngle(90);
-        }
-        else if (Input.GetKeyUp(KeyCode.D))
-        {
-            SetAngle(0);
+            angle = Mathf.Lerp(angle, 0, Time.deltaTime * 5);
         }
         Shift();
+        if (angle != 0)
+        {
+            SetAngle();
+        }
     }
 
     private void Ground()
@@ -108,10 +114,9 @@ public class PlayerControl : MonoBehaviour
             rigid.useGravity = true;
         }
     }
-    void SetAngle(int angle)
+    void SetAngle()
     {
-        transform.DOLocalRotate(new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, angle), 2).SetEase(Ease.OutQuad);
-        transform.rotation = Quaternion.
+        child.localRotation = Quaternion.Euler(0, 0, angle * Time.deltaTime  + child.localEulerAngles.z);
     }
     public void OnCollisionEnter(Collision collision)
     {

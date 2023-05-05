@@ -1,9 +1,10 @@
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using DG.Tweening;
+
 public class PlayerControl : MonoBehaviour
 {
     public float speed = 2;
@@ -14,9 +15,17 @@ public class PlayerControl : MonoBehaviour
 
     public float camSpeed = 9.0f; // 화면이 움직이는 속도 변수
     float pitch = 0;
-    public Transform child;
-    public Transform dir;
+    public Transform child;//c
+    public Transform dir;//c
+    public GameObject model;//c
     float angle = 0;
+
+    public GameObject bullet;
+    public Transform[] bulPoint;//c
+    [SerializeField]
+    private GameObject dieParticel;
+
+    bool canDie = false;
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -25,7 +34,11 @@ public class PlayerControl : MonoBehaviour
     }
     private void Update()
     {
-        if(enter == 0)
+        if (canDie == false)
+            DieCheck();
+        velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
+        Debug.Log(velocity);
+        if (enter == 0)
         {
             Sky();
         }
@@ -34,6 +47,14 @@ public class PlayerControl : MonoBehaviour
             Ground();
         }
         CamTurn();
+        StartCoroutine(ShotBullet());
+    }
+    void DieCheck()
+    {
+        if (transform.position.y >= 20)
+        {
+            canDie = true;
+        }
     }
     void CamTurn()
     {
@@ -43,6 +64,16 @@ public class PlayerControl : MonoBehaviour
             rigid.AddTorque(dir.right * pitch);
         }
     }
+    IEnumerator ShotBullet()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            yield return new WaitForSeconds(Random.Range(0.05f, 0.2f));
+            Instantiate(bullet, bulPoint[0].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 5000);
+            Instantiate(bullet, bulPoint[1].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 5000);
+        }
+        yield return null;
+    }
 
     private void Sky()
     {
@@ -51,7 +82,6 @@ public class PlayerControl : MonoBehaviour
             rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 90);
         }
 
-
         if (Input.GetKey(KeyCode.D))
         {
             angle = Mathf.Lerp(angle, -100, Time.deltaTime * 5);
@@ -59,6 +89,14 @@ public class PlayerControl : MonoBehaviour
         else if (Input.GetKey(KeyCode.A))
         {
             angle = Mathf.Lerp(angle, 100, Time.deltaTime * 5);
+        }
+        else if (Input.GetKey(KeyCode.Q))
+        {
+            angle = Mathf.Lerp(angle, 700, Time.deltaTime * 5);
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            angle = Mathf.Lerp(angle, -700, Time.deltaTime * 5);
         }
         else
         {
@@ -104,7 +142,6 @@ public class PlayerControl : MonoBehaviour
             jet[0].Stop();
             jet[1].Stop();
         }
-        velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
         if (velocity >= 50)
         {
             rigid.useGravity = false;
@@ -120,10 +157,27 @@ public class PlayerControl : MonoBehaviour
     }
     public void OnCollisionEnter(Collision collision)
     {
+        if (velocity > 50 && canDie == true)
+        {
+            StartCoroutine(Die());
+        }
         enter++;
+        
     }
     public void OnCollisionExit(Collision collision)
     {
         enter--;
+    }
+    IEnumerator Die()
+    {
+        GameObject g = Instantiate(dieParticel, transform.position, Quaternion.identity);
+        Destroy(g, 6);
+        foreach(Rigidbody par in g.GetComponentsInChildren<Rigidbody>())
+        {
+            par.velocity = rigid.velocity;
+        }
+        rigid.isKinematic = true;
+        model.SetActive(false);
+        yield return new WaitForSecondsRealtime(3);
     }
 }

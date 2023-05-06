@@ -37,7 +37,6 @@ public class PlayerControl : MonoBehaviour
         if (canDie == false)
             DieCheck();
         velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
-        Debug.Log(velocity);
         if (enter == 0)
         {
             Sky();
@@ -69,8 +68,8 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             yield return new WaitForSeconds(Random.Range(0.05f, 0.2f));
-            Instantiate(bullet, bulPoint[0].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 5000);
-            Instantiate(bullet, bulPoint[1].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 5000);
+            Instantiate(bullet, bulPoint[0].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
+            Instantiate(bullet, bulPoint[1].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
         }
         yield return null;
     }

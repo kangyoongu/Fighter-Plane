@@ -31,15 +31,15 @@ public class EnemyContol : MonoBehaviour
         float dis = Vector3.Distance(transform.position, target.position);
         if (dis >= 300)
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 5);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 20);
         }
         else if (dis <= 160)
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 0.2f);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 2);
         }
         else
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 7);
         }
     }
 }

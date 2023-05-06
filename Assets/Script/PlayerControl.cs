@@ -5,6 +5,12 @@ using UnityEngine;
 using UnityEngine.VFX;
 using DG.Tweening;
 
+public enum State : short
+{
+    GROUND = 0,
+    FLY = 1,
+    DIE = 2
+}
 public class PlayerControl : MonoBehaviour
 {
     public float speed = 2;
@@ -18,14 +24,18 @@ public class PlayerControl : MonoBehaviour
     public Transform child;//c
     public Transform dir;//c
     public GameObject model;//c
+    public Animator tire;//c
+    public Animator miss;//c
+    public Transform misPos;//c
     float angle = 0;
 
     public GameObject bullet;
     public Transform[] bulPoint;//c
     [SerializeField]
     private GameObject dieParticel;
-
+    public State playState = State.GROUND;
     bool canDie = false;
+    public GameObject mis;
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -34,25 +44,43 @@ public class PlayerControl : MonoBehaviour
     }
     private void Update()
     {
-        if (canDie == false)
-            DieCheck();
-        velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
-        if (enter == 0)
+        if ((short)playState < 2)
         {
-            Sky();
+            if (canDie == false)
+                DieCheck();
+
+            if(transform.position.y < 20)
+                tire.SetBool("IsSky", false);
+
+            if (enter == 0)
+                Sky();
+            else
+                Ground();
+
+            CamTurn();
+            StartCoroutine(ShotBullet());
+            if(playState == State.FLY)
+            {
+
+            }
+            else if(playState == State.GROUND)
+            {
+                tire.SetBool("IsSky", false);
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                miss.SetBool("Shot", true);
+            }
         }
-        else
-        {
-            Ground();
-        }
-        CamTurn();
-        StartCoroutine(ShotBullet());
     }
     void DieCheck()
     {
         if (transform.position.y >= 20)
         {
             canDie = true;
+            playState = State.FLY;
+            tire.SetBool("IsSky", true);
         }
     }
     void CamTurn()
@@ -60,6 +88,7 @@ public class PlayerControl : MonoBehaviour
         if (rigid.useGravity == false)
         {
             pitch = -camSpeed * Input.GetAxis("Mouse Y"); // 마우스y값을 지속적으로 받을 변수
+            pitch = Mathf.Clamp(pitch, -100, 100);
             rigid.AddTorque(dir.right * pitch);
         }
     }
@@ -80,7 +109,10 @@ public class PlayerControl : MonoBehaviour
         {
             rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 90);
         }
-
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            rigid.AddTorque(dir.right * -6000);
+        }
         if (Input.GetKey(KeyCode.D))
         {
             angle = Mathf.Lerp(angle, -100, Time.deltaTime * 5);
@@ -141,6 +173,7 @@ public class PlayerControl : MonoBehaviour
             jet[0].Stop();
             jet[1].Stop();
         }
+        velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
         if (velocity >= 50)
         {
             rigid.useGravity = false;
@@ -156,9 +189,15 @@ public class PlayerControl : MonoBehaviour
     }
     public void OnCollisionEnter(Collision collision)
     {
-        if (velocity > 50 && canDie == true)
+        velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
+        if (velocity > 60 && canDie == true)
         {
             StartCoroutine(Die());
+        }
+        else if(velocity <= 60)
+        {
+            canDie = false;
+            playState = State.GROUND;
         }
         enter++;
         
@@ -169,6 +208,7 @@ public class PlayerControl : MonoBehaviour
     }
     IEnumerator Die()
     {
+        playState = State.DIE;
         GameObject g = Instantiate(dieParticel, transform.position, Quaternion.identity);
         Destroy(g, 6);
         foreach(Rigidbody par in g.GetComponentsInChildren<Rigidbody>())
@@ -178,5 +218,10 @@ public class PlayerControl : MonoBehaviour
         rigid.isKinematic = true;
         model.SetActive(false);
         yield return new WaitForSecondsRealtime(3);
+    }
+    public void ShotMis()
+    {
+        Instantiate(mis, misPos.position, dir.rotation * Quaternion.Euler(0, -90, 0)).GetComponent<Rigidbody>().velocity = rigid.velocity;
+
     }
 }

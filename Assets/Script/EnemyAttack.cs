@@ -18,7 +18,10 @@ public class EnemyAttack : MonoBehaviour
     }
     void Update()
     {
-        
+        if(shot == true)
+        {
+
+        }
     }
     public void OnTriggerEnter(Collider other)
     {
@@ -36,7 +39,7 @@ public class EnemyAttack : MonoBehaviour
     }
     IEnumerator ShotBullet()
     {
-       // while (true)
+        while (true)
         {
             if (shot == true)
             {
@@ -44,6 +47,7 @@ public class EnemyAttack : MonoBehaviour
                 Instantiate(bullet, bulPoint[0].position, root.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
                 Instantiate(bullet, bulPoint[1].position, root.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
             }
+            yield return null;
         }
     }
 }

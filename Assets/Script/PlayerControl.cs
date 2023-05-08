@@ -38,6 +38,8 @@ public class PlayerControl : MonoBehaviour
     public GameObject mis;
     float mistime = 0;
     private GameObject g = null;
+    public GameObject smoke;
+    float power = 1;
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -119,7 +121,7 @@ public class PlayerControl : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.W))
         {
-            rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 90);
+            rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 90 * power);
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -176,7 +178,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
         {
-            rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 80);
+            rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 80 * power);
             jet[0].Play();
             jet[1].Play();
         }
@@ -200,7 +202,18 @@ public class PlayerControl : MonoBehaviour
     }
     public void OnCollisionEnter(Collision collision)
     {
-        if (velocity > 50 && canDie == true)
+        if(collision.gameObject.tag == "EnemyBullet")
+        {
+            Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
+            t.parent = transform;
+            t.localScale = new Vector3(5, 5, 5);
+            if(power >= 0)
+            {
+                power -= 0.03f;
+            }
+
+        }
+        if (velocity > 50 && canDie == true && collision.gameObject.tag != "EnemyBullet")
         {
             StartCoroutine(Die());
         }

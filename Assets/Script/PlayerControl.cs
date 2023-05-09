@@ -13,11 +13,12 @@ public enum State : short
 }
 public class PlayerControl : MonoBehaviour
 {
+    public static PlayerControl Instance;
     public float speed = 2;
     private Rigidbody rigid;
     float velocity = 0;
-    int enter = 0;
     public VisualEffect[] jet;
+    int damage = 0;
 
     public float camSpeed = 9.0f; // 화면이 움직이는 속도 변수
     float pitch = 0;
@@ -36,10 +37,18 @@ public class PlayerControl : MonoBehaviour
     public State playState = State.GROUND;
     bool canDie = false;
     public GameObject mis;
-    float mistime = 0;
+    float misTime = 0;
     private GameObject g = null;
     public GameObject smoke;
     float power = 1;
+    float sTime = 0;
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+    }
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
@@ -56,35 +65,37 @@ public class PlayerControl : MonoBehaviour
                 DieCheck();
             }
 
-            if(transform.position.y < 20)
+            if(transform.position.y < 20)//바퀴 관리
                 tire.SetBool("IsSky", false);
 
-            if (enter == 0)
-                Sky();
-            else
-                Ground();
-
-            CamTurn();
+            CamTurn();//카메라 회전
             StartCoroutine(ShotBullet());
-            mistime += Time.deltaTime;
-            if(playState == State.FLY)
-            {
-                if (mistime >= 6)
-                {
-                    if (FindEnemy.Instance.canShot == true)
-                    {
-                        miss.SetBool("Shot", true);
-                        mistime = 0;
-                    }
-                }
-            }
-            else if(playState == State.GROUND)
-            {
-                tire.SetBool("IsSky", false);
-            }
+            misTime += Time.deltaTime; 
+            sTime += Time.deltaTime;
+            States(); // 상태 판단
         }
     }
-    void DieCheck()
+    void States()//각 상태에 따라 할 일;
+    {
+        if (playState == State.FLY)
+        {
+            Sky();
+            if (misTime >= 4)
+            {
+                if (FindEnemy.Instance.canShot == true)
+                {
+                    miss.SetBool("Shot", true);
+                    misTime = 0;
+                }
+            }
+        }
+        else if (playState == State.GROUND)
+        {
+            Ground();
+            tire.SetBool("IsSky", false);
+        }
+    }
+    void DieCheck()//죽을 수 있는 상태인지 판단
     {
         if (transform.position.y >= 20)
         {
@@ -98,11 +109,11 @@ public class PlayerControl : MonoBehaviour
         if (rigid.useGravity == false)
         {
             pitch = -camSpeed * Input.GetAxis("Mouse Y"); // 마우스y값을 지속적으로 받을 변수
-            pitch = Mathf.Clamp(pitch, -220, 220);
+            pitch = Mathf.Clamp(pitch, -420, 420);
             rigid.AddTorque(dir.right * pitch);
         }
     }
-    IEnumerator ShotBullet()
+    IEnumerator ShotBullet()//총 쏨
     {
         if (Input.GetMouseButton(0))
         {
@@ -115,19 +126,23 @@ public class PlayerControl : MonoBehaviour
 
     private void Sky()
     {
-        if(!(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift)))
+        if(!(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))) // 부스터 안쓰고있으면
         {
-            rigid.AddForce(Vector3.down * 300);
+            rigid.AddForce(Vector3.down * 300);//떨어짐
         }
         if (Input.GetKey(KeyCode.W))
         {
             rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 90 * power);
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S)) // 급상승
         {
-            rigid.AddTorque(dir.right * -30000);
+            if (sTime >= 4)
+            {
+                rigid.AddTorque(dir.right * -28000);
+                sTime = 0;
+            }
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D))//회전
         {
             angle = Mathf.Lerp(angle, -100, Time.deltaTime * 5);
         }
@@ -204,34 +219,30 @@ public class PlayerControl : MonoBehaviour
     {
         if(collision.gameObject.tag == "EnemyBullet")
         {
-            Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
-            t.parent = transform;
-            t.localScale = new Vector3(5, 5, 5);
-            if(power >= 0)
+            if(damage >= 20)
             {
-                power -= 0.03f;
+                StartCoroutine(Die());
             }
-
+            Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
+            t.parent = transform.GetChild(0);
+            t.localScale = new Vector3(5, 5, 5);
+            power -= 0.04f;
+            damage++;
+            Destroy(collision.gameObject);
         }
-        if (velocity > 50 && canDie == true && collision.gameObject.tag != "EnemyBullet")
+        if (velocity > 50 && canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy")
         {
             StartCoroutine(Die());
         }
-        else if(velocity <= 50)
+        /*else if(velocity <= 50)
         {
             canDie = false;
             playState = State.GROUND;
-        }
-        enter++;
-        
+        }*/
     }
-    public void OnCollisionExit(Collision collision)
+    public IEnumerator Die()//죽었을 때
     {
-        enter--;
-    }
-    IEnumerator Die()
-    {
-        if (g == null)
+        if (g == null)//한번만 죽도록
         {
             playState = State.DIE;
             g = Instantiate(dieParticel, transform.position, Quaternion.identity);
@@ -241,6 +252,7 @@ public class PlayerControl : MonoBehaviour
             g.GetComponentInChildren<Rigidbody>().velocity = rigid.velocity;
             rigid.isKinematic = true;
             model.SetActive(false);
+            GameManager.Instance.gameOver = true;
             yield return new WaitForSecondsRealtime(3);
         }
         else
@@ -248,9 +260,8 @@ public class PlayerControl : MonoBehaviour
             yield return null;
         }
     }
-    public void ShotMis()
+    public void ShotMis()//히히 미사일 발사
     {
         Instantiate(mis, misPos.position, dir.rotation * Quaternion.Euler(0, -90, 0)).GetComponent<Rigidbody>().velocity = rigid.velocity;
-
     }
 }

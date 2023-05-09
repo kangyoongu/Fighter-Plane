@@ -978,7 +978,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 106.35
+      scalar: 554.9
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -1432,8 +1432,8 @@ ParticleSystem:
         ctime5: 0
         ctime6: 0
         ctime7: 0
-        atime0: 9281
-        atime1: 18751
+        atime0: 0
+        atime1: 7766
         atime2: 50572
         atime3: 65535
         atime4: 0
@@ -4944,11 +4944,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1374693194890512, guid: 285fd8dbd96cfab43b28b8e12386178d, type: 3}
       propertyPath: m_Name
-      value: Missile 1
+      value: EnemyMissile
       objectReference: {fileID: 0}
     - target: {fileID: 1374693194890512, guid: 285fd8dbd96cfab43b28b8e12386178d, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1374693194890512, guid: 285fd8dbd96cfab43b28b8e12386178d, type: 3}
+      propertyPath: m_TagString
+      value: EnemyMis
       objectReference: {fileID: 0}
     - target: {fileID: 1455648021515490, guid: 285fd8dbd96cfab43b28b8e12386178d, type: 3}
       propertyPath: m_Layer
@@ -5042,12 +5046,12 @@ Rigidbody:
   m_GameObject: {fileID: 6856543709614451417}
   serializedVersion: 2
   m_Mass: 2
-  m_Drag: 0
-  m_AngularDrag: 0
+  m_Drag: 20
+  m_AngularDrag: 20
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &7465014001566180005
 CapsuleCollider:
@@ -5072,9 +5076,24 @@ ConstantForce:
   m_GameObject: {fileID: 6856543709614451417}
   m_Enabled: 1
   m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 200, y: 0, z: 0}
+  m_RelativeForce: {x: 13000, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
+--- !u!114 &3546310810527913147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6856543709614451417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc279bc8fefb94849af9633e1dc522e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  speed: 3
+  exp: {fileID: 247653057124291437, guid: 6db0ee0e1c2caed419c5169d7ea232ad, type: 3}
 --- !u!4 &6858189110841240321 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4110813848190152, guid: 285fd8dbd96cfab43b28b8e12386178d, type: 3}

@@ -978,7 +978,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 352.73
+      scalar: 554.9
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -4950,6 +4950,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1374693194890512, guid: 285fd8dbd96cfab43b28b8e12386178d, type: 3}
+      propertyPath: m_TagString
+      value: Mis
+      objectReference: {fileID: 0}
     - target: {fileID: 1455648021515490, guid: 285fd8dbd96cfab43b28b8e12386178d, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -5042,8 +5046,8 @@ Rigidbody:
   m_GameObject: {fileID: 6856543709614451417}
   serializedVersion: 2
   m_Mass: 2
-  m_Drag: 6
-  m_AngularDrag: 6
+  m_Drag: 20
+  m_AngularDrag: 20
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -5072,7 +5076,7 @@ ConstantForce:
   m_GameObject: {fileID: 6856543709614451417}
   m_Enabled: 1
   m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 4000, y: 0, z: 0}
+  m_RelativeForce: {x: 13000, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!114 &-7823272798445556353

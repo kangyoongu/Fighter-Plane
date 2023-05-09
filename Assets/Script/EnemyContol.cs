@@ -18,6 +18,8 @@ public class EnemyContol : MonoBehaviour
     public GameObject exp;
     private GameObject g = null;
     float startTime = 0;
+    public GameObject enemini;
+    private Transform mymini;
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
@@ -26,6 +28,7 @@ public class EnemyContol : MonoBehaviour
     {
         speed += Random.Range(-0.5f, 0.5f);
         speeds += Random.Range(-1000, 1000);
+        Instantiate(enemini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
     }
 
     void Update()

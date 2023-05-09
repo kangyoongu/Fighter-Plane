@@ -7,14 +7,17 @@ public class PlayerMiss : MonoBehaviour
     private Transform target;
     public float speed = 10;
     public GameObject exp;
+    public GameObject mini;
     private void Start()
     {
         Destroy(gameObject, 50f);
         target = FindEnemy.Instance.target;
+        Instantiate(mini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
     }
     void Update()
     {
         FollowTarget();
+
     }
     void FollowTarget()
     {

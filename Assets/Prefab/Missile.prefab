@@ -5093,6 +5093,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   exp: {fileID: 247653057124291437, guid: 6db0ee0e1c2caed419c5169d7ea232ad, type: 3}
+  mini: {fileID: 4670701973633274704, guid: 61ccbb8490260854c92b903362c9db55, type: 3}
 --- !u!4 &6858189110841240321 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4110813848190152, guid: 285fd8dbd96cfab43b28b8e12386178d, type: 3}

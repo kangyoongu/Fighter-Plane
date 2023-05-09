@@ -7,9 +7,11 @@ public class EnemyMiss : MonoBehaviour
     public Transform target;
     public float speed = 10;
     public GameObject exp;
+    public GameObject mini;
     private void Start()
     {
         Destroy(gameObject, 50f);
+        Instantiate(mini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
     }
     void Update()
     {

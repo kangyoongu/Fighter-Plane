@@ -5046,8 +5046,8 @@ Rigidbody:
   m_GameObject: {fileID: 6856543709614451417}
   serializedVersion: 2
   m_Mass: 2
-  m_Drag: 20
-  m_AngularDrag: 20
+  m_Drag: 8
+  m_AngularDrag: 8
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -5076,7 +5076,7 @@ ConstantForce:
   m_GameObject: {fileID: 6856543709614451417}
   m_Enabled: 1
   m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 13000, y: 0, z: 0}
+  m_RelativeForce: {x: 5000, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!114 &3546310810527913147
@@ -5092,7 +5092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  speed: 3
+  speed: 2
   exp: {fileID: 247653057124291437, guid: 6db0ee0e1c2caed419c5169d7ea232ad, type: 3}
   mini: {fileID: 2427427828930524895, guid: 992006de850391340b8bc4d89b10341a, type: 3}
 --- !u!4 &6858189110841240321 stripped

@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
-using DG.Tweening;
-
-public enum State : short
+using UnityEngine.SceneManagement;
+public enum State2 : short
 {
     GROUND = 0,
     FLY = 1,
@@ -34,7 +33,7 @@ public class PlayerControl : MonoBehaviour
     public Transform[] bulPoint;//c
     [SerializeField]
     private GameObject dieParticel;
-    public State playState = State.GROUND;
+    public State2 playState = State2.GROUND;
     bool canDie = false;
     public GameObject mis;
     float misTime = 0;
@@ -42,6 +41,8 @@ public class PlayerControl : MonoBehaviour
     public GameObject smoke;
     float power = 1;
     float sTime = 0;
+    public ParticleSystem[] flares;//c
+    float flaresTime = 0;
     private void Awake()
     {
         if(Instance == null)
@@ -57,6 +58,7 @@ public class PlayerControl : MonoBehaviour
     }
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R)) SceneManager.LoadScene(0);//간이 재시작 코드
         velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
         if ((short)playState < 2)
         {
@@ -72,12 +74,13 @@ public class PlayerControl : MonoBehaviour
             StartCoroutine(ShotBullet());
             misTime += Time.deltaTime; 
             sTime += Time.deltaTime;
+            flaresTime += Time.deltaTime;
             States(); // 상태 판단
         }
     }
-    void States()//각 상태에 따라 할 일;
+    private void States()//각 상태에 따라 할 일;
     {
-        if (playState == State.FLY)
+        if (playState == State2.FLY)
         {
             Sky();
             if (misTime >= 4)
@@ -88,23 +91,36 @@ public class PlayerControl : MonoBehaviour
                     misTime = 0;
                 }
             }
+            if(flaresTime > 6)
+            {
+                ShotFlares();
+            }
         }
-        else if (playState == State.GROUND)
+        else if (playState == State2.GROUND)
         {
             Ground();
             tire.SetBool("IsSky", false);
         }
     }
-    void DieCheck()//죽을 수 있는 상태인지 판단
+    private void ShotFlares()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            flares[0].Play();
+            flares[1].Play();
+            flaresTime = 0;
+        }
+    }
+    private void DieCheck()//죽을 수 있는 상태인지 판단
     {
         if (transform.position.y >= 20)
         {
             canDie = true;
-            playState = State.FLY;
+            playState = State2.FLY;
             tire.SetBool("IsSky", true);
         }
     }
-    void CamTurn()
+    private void CamTurn()
     {
         if (rigid.useGravity == false)
         {
@@ -113,11 +129,11 @@ public class PlayerControl : MonoBehaviour
             rigid.AddTorque(dir.right * pitch);
         }
     }
-    IEnumerator ShotBullet()//총 쏨
+    private IEnumerator ShotBullet()//총 쏨
     {
         if (Input.GetMouseButton(0))
         {
-            yield return new WaitForSeconds(Random.Range(0.05f, 0.2f));
+            yield return new WaitForSeconds(Random.Range(0.03f, 0.05f));
             Instantiate(bullet, bulPoint[0].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
             Instantiate(bullet, bulPoint[1].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
         }
@@ -189,7 +205,7 @@ public class PlayerControl : MonoBehaviour
         }
         Shift();
     }
-    void Shift()
+    private void Shift()
     {
         if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
         {
@@ -244,7 +260,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (g == null)//한번만 죽도록
         {
-            playState = State.DIE;
+            playState = State2.DIE;
             g = Instantiate(dieParticel, transform.position, Quaternion.identity);
             g.transform.position = transform.position;
             g.transform.rotation = transform.rotation;

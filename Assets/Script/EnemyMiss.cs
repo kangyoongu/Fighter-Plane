@@ -33,4 +33,9 @@ public class EnemyMiss : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public void OnParticleCollision(GameObject other)
+    {
+        Destroy(Instantiate(exp, transform.position, Quaternion.identity), 7);
+        Destroy(gameObject);
+    }
 }

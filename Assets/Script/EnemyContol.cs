@@ -54,13 +54,13 @@ public class EnemyContol : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir, Vector3.right), Time.deltaTime * speed);
         }
         float dis = Vector3.Distance(transform.position, target.position);
-        if (dis >= 300)
+        if (dis >= 1500)
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 100 * power);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 110 * power);
             jet[0].Play();
             jet[1].Play();
         }
-        else if (dis <= 160)
+        else if (dis <= 200)
         {
             rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 40 * power);
             jet[0].Stop();

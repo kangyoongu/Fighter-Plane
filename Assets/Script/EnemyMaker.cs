@@ -11,6 +11,7 @@ public class EnemyMaker : MonoBehaviour
     void Update()
     {
         time += Time.deltaTime;
+        print(enemyCount);
         if(GameManager.Instance.gameOver == false)
         {
             if(enemyCount < 5)

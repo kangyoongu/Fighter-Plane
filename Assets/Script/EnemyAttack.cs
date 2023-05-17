@@ -52,7 +52,7 @@ public class EnemyAttack : MonoBehaviour
         {
             if (shot == true)
             {
-                yield return new WaitForSeconds(Random.Range(0.7f, 0.4f));
+                yield return new WaitForSeconds(Random.Range(0.2f, 0.1f));
                 Instantiate(bullet, bulPoint[0].position, root.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
                 Instantiate(bullet, bulPoint[1].position, root.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
             }

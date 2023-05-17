@@ -34,7 +34,7 @@ public class EnemyMiss : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            StartCoroutine(PlayerControl.Instance.Die());
+            PlayerControl.Instance.Die();
             DieMis();
         }
         else
@@ -44,6 +44,7 @@ public class EnemyMiss : MonoBehaviour
     }
     public void OnParticleCollision(GameObject other)
     {
+        ScoreManager.Instance.Score += 70;
         DieMis();
     }
     private void DieMis()

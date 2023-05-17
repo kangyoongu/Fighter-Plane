@@ -79,7 +79,6 @@ public class TierManager : MonoBehaviour
                 butStyle[0].SetActive(false);
                 butStyle[1].SetActive(true);
                 level.text = "";
-                
             }
         }
     }

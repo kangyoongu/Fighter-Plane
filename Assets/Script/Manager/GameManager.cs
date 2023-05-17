@@ -28,6 +28,16 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         CameraManager.Instance.MakePlayingView();
+        ScoreManager.Instance.Score = 0;
         UIManager.Instance.StartPlay();
+    }
+    public IEnumerator ReStart()
+    {
+        yield return new WaitForSeconds(3);
+       // PlayerControl.Instance.tire.SetBool("IsSky", true);
+       // PlayerControl.Instance.miss.SetBool("Shot", false);
+        FindEnemy.Instance.canShot = false;
+        EnemyMaker.enemyCount = 0;
+        SceneManager.LoadScene(0);
     }
 }

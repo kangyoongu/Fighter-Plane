@@ -241,7 +241,7 @@ public class PlayerControl : MonoBehaviour
         {
             if(damage >= 20)
             {
-                StartCoroutine(Die());
+                Die();
             }
             Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
             t.parent = transform.GetChild(0);
@@ -252,10 +252,10 @@ public class PlayerControl : MonoBehaviour
         }
         if (canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy" && collision.gameObject.tag != "EnemyMis")
         {
-            StartCoroutine(Die());
+            Die();
         }
     }
-    public IEnumerator Die()//죽었을 때
+    public void Die()//죽었을 때
     {
         if (g == null)//한번만 죽도록
         {
@@ -268,11 +268,7 @@ public class PlayerControl : MonoBehaviour
             rigid.isKinematic = true;
             model.SetActive(false);
             GameManager.Instance.gameOver = true;
-            yield return new WaitForSecondsRealtime(3);
-        }
-        else
-        {
-            yield return null;
+            StartCoroutine(GameManager.Instance.ReStart());
         }
     }
     public void ShotMis()// 미사일 발사

@@ -80,24 +80,26 @@ public class EnemyContol : MonoBehaviour
             Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
             Destroy(collision.gameObject);
             FindEnemy.Instance.canShot = false;
+            ScoreManager.Instance.Score += 100;
             StartCoroutine(Die());
         }
         else if(collision.gameObject.tag == "Bullet")
         {
-            if (damage >= 20)
-            {
-                StartCoroutine(Die());
-            }
             Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
             t.parent = transform;
             t.localScale = new Vector3(5, 5, 5);
             power -= 0.04f;
             damage++;
+            ScoreManager.Instance.Score += 500;
+            if (damage >= 20)
+            {
+                StartCoroutine(Die());
+            }
             Destroy(collision.gameObject);
         }
         else if(collision.gameObject.tag == "Player")
         {
-            StartCoroutine(PlayerControl.Instance.Die());
+            PlayerControl.Instance.Die();
             StartCoroutine(Die());
         }
         else

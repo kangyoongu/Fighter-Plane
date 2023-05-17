@@ -16,7 +16,8 @@ public class TEnemyControl : MonoBehaviour
         if (collision.gameObject.tag == "Mis")
         {
             Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
-            StartCoroutine(TutorialManager.Instance.SixSet());
+            TutorialManager.Instance.SixSet();
+            FindEnemy.Instance.canShot = false;
             Destroy(collision.gameObject);
             StartCoroutine(Die());
         }

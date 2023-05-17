@@ -29,17 +29,15 @@ public class TutorialManager : MonoBehaviour
         Time.timeScale = 0;
         StartCoroutine(OneSet());
     }
-    void Update()
-    {
-        
-    }
     IEnumerator OneSet()
     {
         UIs[0].SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitWhile(() => !Input.GetKeyDown(KeyCode.Tab));
+        yield return new WaitWhile(() => !Input.GetKeyUp(KeyCode.Tab));
         UIs[0].SetActive(false);
         UIs[1].SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitWhile(() => !Input.GetKeyDown(KeyCode.Tab));
+        yield return new WaitWhile(() => !Input.GetKeyUp(KeyCode.Tab));
         UIs[1].SetActive(false);
         UIs[2].SetActive(true);
         point[0].SetActive(true);
@@ -70,7 +68,7 @@ public class TutorialManager : MonoBehaviour
     {
         level = 4;
         UIs[5].SetActive(true);
-        yield return new WaitForSecondsRealtime(4);
+        yield return new WaitForSecondsRealtime(5);
         UIs[5].SetActive(false);
         UIs[6].SetActive(true);
         yield return new WaitForSecondsRealtime(3);
@@ -93,11 +91,13 @@ public class TutorialManager : MonoBehaviour
         isStop = true;
         UIs[10].SetActive(false);
         UIs[11].SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitWhile(() => !Input.GetKeyDown(KeyCode.Tab));
+        yield return new WaitWhile(() => !Input.GetKeyUp(KeyCode.Tab));
         UIs[11].SetActive(false);
         UIs[12].SetActive(true);
         playerRange.SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitWhile(() => !Input.GetKeyDown(KeyCode.Tab));
+        yield return new WaitWhile(() => !Input.GetKeyUp(KeyCode.Tab));
         UIs[12].SetActive(false);
         UIs[13].SetActive(true);
         time[1].text = "3";
@@ -111,12 +111,16 @@ public class TutorialManager : MonoBehaviour
         isStop = false;
         Time.timeScale = 1;
     }
-    public IEnumerator SixSet()
+    public void SixSet()
     {
         level = 6;
+        PlayerPrefs.SetInt("Tutorial", 1);
         UIs[14].SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
-        SceneManager.LoadScene(0);
+        Invoke("Sceneload", 3);
+    }
+    private void Sceneload()
+    {
+        SceneManager.LoadScene("Playing");
     }
     public void Restart()
     {

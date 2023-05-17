@@ -309,6 +309,7 @@ public class TPlayerControl : MonoBehaviour
             if (TutorialManager.Instance.level < 6)
             {
                 canDie = false;
+                angle = 0;
                 TutorialManager.Instance.Restart();
                 model.SetActive(true);
                 StopAllCoroutines();

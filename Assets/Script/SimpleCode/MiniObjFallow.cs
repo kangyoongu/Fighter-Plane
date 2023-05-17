@@ -9,7 +9,7 @@ public class MiniObjFallow : MonoBehaviour
     {
         if (target != null)
         {
-            transform.position = new Vector3(target.position.x, (10000 + target.position.y*0.01f), target.position.z);
+            transform.position = new Vector3(target.position.x, (8000 + target.position.y*0.01f), target.position.z);
             transform.rotation = Quaternion.Euler(0, target.eulerAngles.y, 0);
         }
         else

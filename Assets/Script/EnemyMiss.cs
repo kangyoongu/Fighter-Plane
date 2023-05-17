@@ -8,14 +8,19 @@ public class EnemyMiss : MonoBehaviour
     public float speed = 10;
     public GameObject exp;
     public GameObject mini;
+    float time = 0;
     private void Start()
     {
-        Destroy(gameObject, 50f);
         Instantiate(mini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
     }
     void Update()
     {
         FollowTarget();
+        time += Time.deltaTime;
+        if(time >= 20)
+        {
+            DieMis();
+        }
     }
     void FollowTarget()
     {
@@ -27,13 +32,21 @@ public class EnemyMiss : MonoBehaviour
     }
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag != "Player")
+        if (collision.gameObject.tag == "Player")
         {
-            Destroy(Instantiate(exp, transform.position, Quaternion.identity), 7);
-            Destroy(gameObject);
+            StartCoroutine(PlayerControl.Instance.Die());
+            DieMis();
+        }
+        else
+        {
+            DieMis();
         }
     }
     public void OnParticleCollision(GameObject other)
+    {
+        DieMis();
+    }
+    private void DieMis()
     {
         Destroy(Instantiate(exp, transform.position, Quaternion.identity), 7);
         Destroy(gameObject);

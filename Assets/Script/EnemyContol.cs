@@ -60,15 +60,15 @@ public class EnemyContol : MonoBehaviour
             jet[0].Play();
             jet[1].Play();
         }
-        else if (dis <= 200)
+        else if (dis <= 800)
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 40 * power);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 50 * power);
             jet[0].Stop();
             jet[1].Stop();
         }
         else
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 70 * power);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 80 * power);
             jet[0].Play();
             jet[1].Play();
         }
@@ -79,6 +79,7 @@ public class EnemyContol : MonoBehaviour
         {
             Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
             Destroy(collision.gameObject);
+            FindEnemy.Instance.canShot = false;
             StartCoroutine(Die());
         }
         else if(collision.gameObject.tag == "Bullet")
@@ -97,6 +98,7 @@ public class EnemyContol : MonoBehaviour
         else if(collision.gameObject.tag == "Player")
         {
             StartCoroutine(PlayerControl.Instance.Die());
+            StartCoroutine(Die());
         }
         else
         {
@@ -111,6 +113,7 @@ public class EnemyContol : MonoBehaviour
             g.transform.position = transform.position;
             g.transform.rotation = transform.rotation;
             g.GetComponentInChildren<Rigidbody>().velocity = rigid.velocity;
+            EnemyMaker.enemyCount -= 1;
             Destroy(gameObject);
         }
         yield return null;

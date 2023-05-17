@@ -21,6 +21,7 @@ public class PlayerControl : MonoBehaviour
 
     public float camSpeed = 9.0f; // 화면이 움직이는 속도 변수
     float pitch = 0;
+    float turn = 0;
     public Transform child;//c
     public Transform dir;//c
     public GameObject model;//c
@@ -53,29 +54,28 @@ public class PlayerControl : MonoBehaviour
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) SceneManager.LoadScene(0);//간이 재시작 코드
-        velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
-        if ((short)playState < 2)
+        if (GameManager.Instance.gameOver == false)
         {
-            if (canDie == false)
+            velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
+            if ((short)playState < 2)
             {
-                DieCheck();
+                if (canDie == false)
+                {
+                    DieCheck();
+                }
+
+                if (transform.position.y < 20)//바퀴 관리
+                    tire.SetBool("IsSky", false);
+
+                CamTurn();//카메라 회전
+                misTime += Time.deltaTime;
+                sTime += Time.deltaTime;
+                flaresTime += Time.deltaTime;
+                States(); // 상태 판단
             }
-
-            if(transform.position.y < 20)//바퀴 관리
-                tire.SetBool("IsSky", false);
-
-            CamTurn();//카메라 회전
-            StartCoroutine(ShotBullet());
-            misTime += Time.deltaTime; 
-            sTime += Time.deltaTime;
-            flaresTime += Time.deltaTime;
-            States(); // 상태 판단
         }
     }
     private void States()//각 상태에 따라 할 일;
@@ -83,6 +83,7 @@ public class PlayerControl : MonoBehaviour
         if (playState == State2.FLY)
         {
             Sky();
+            StartCoroutine(ShotBullet());
             if (misTime >= 4)
             {
                 if (FindEnemy.Instance.canShot == true)
@@ -122,11 +123,14 @@ public class PlayerControl : MonoBehaviour
     }
     private void CamTurn()
     {
-        if (rigid.useGravity == false)
+        if (velocity >= 40)
         {
             pitch = -camSpeed * Input.GetAxis("Mouse Y"); // 마우스y값을 지속적으로 받을 변수
-            pitch = Mathf.Clamp(pitch, -420, 420);
+            pitch = Mathf.Clamp(pitch, -900, 900);
             rigid.AddTorque(dir.right * pitch);
+            turn = -camSpeed * Input.GetAxis("Mouse X"); // 마우스로 방향조정
+            turn = Mathf.Clamp(turn, -900, 900);
+            rigid.AddTorque(dir.forward * turn);//끝
         }
     }
     private IEnumerator ShotBullet()//총 쏨
@@ -144,7 +148,7 @@ public class PlayerControl : MonoBehaviour
     {
         if(!(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))) // 부스터 안쓰고있으면
         {
-            rigid.AddForce(Vector3.down * 300);//떨어짐
+            rigid.AddForce(Vector3.down * 1200);//떨어짐
         }
         if (Input.GetKey(KeyCode.W))
         {
@@ -154,19 +158,19 @@ public class PlayerControl : MonoBehaviour
         {
             if (sTime >= 4)
             {
-                rigid.AddTorque(dir.right * -28000);
+                rigid.AddTorque(dir.right * -90000);
                 sTime = 0;
             }
         }
-        if (Input.GetKey(KeyCode.D))//회전
+        /*if (Input.GetKey(KeyCode.D))//회전
         {
             angle = Mathf.Lerp(angle, -100, Time.deltaTime * 5);
         }
         else if (Input.GetKey(KeyCode.A))
         {
             angle = Mathf.Lerp(angle, 100, Time.deltaTime * 5);
-        }
-        else if (Input.GetKey(KeyCode.Q))
+        }*/
+        if (Input.GetKey(KeyCode.Q))
         {
             angle = Mathf.Lerp(angle, 700, Time.deltaTime * 5);
         }
@@ -183,25 +187,33 @@ public class PlayerControl : MonoBehaviour
         {
             SetAngle();
         }
+        if (velocity >= 60)
+        {
+            rigid.useGravity = false;
+        }
+        else
+        {
+            rigid.useGravity = true;
+        }
     }
 
     private void Ground()
     {
         if (Input.GetKey(KeyCode.W))
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * speed * 0.03f);
+            transform.Translate(Vector3.forward * Time.deltaTime * speed * 0.01f);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * -speed * 0.03f);
+            transform.Translate(Vector3.forward * Time.deltaTime * -speed * 0.01f);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(Vector3.up * -speed * Time.deltaTime * 0.07f);
+            transform.Rotate(Vector3.up * -speed * Time.deltaTime * 0.015f);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(Vector3.up * speed * Time.deltaTime * 0.07f);
+            transform.Rotate(Vector3.up * speed * Time.deltaTime * 0.015f);
         }
         Shift();
     }
@@ -209,7 +221,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
         {
-            rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 80 * power);
+            rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 70 * power);
             jet[0].Play();
             jet[1].Play();
         }
@@ -217,14 +229,6 @@ public class PlayerControl : MonoBehaviour
         {
             jet[0].Stop();
             jet[1].Stop();
-        }
-        if (velocity >= 50)
-        {
-            rigid.useGravity = false;
-        }
-        else
-        {
-            rigid.useGravity = true;
         }
     }
     void SetAngle()
@@ -246,15 +250,10 @@ public class PlayerControl : MonoBehaviour
             damage++;
             Destroy(collision.gameObject);
         }
-        if (velocity > 50 && canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy")
+        if (canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy" && collision.gameObject.tag != "EnemyMis")
         {
             StartCoroutine(Die());
         }
-        /*else if(velocity <= 50)
-        {
-            canDie = false;
-            playState = State.GROUND;
-        }*/
     }
     public IEnumerator Die()//죽었을 때
     {
@@ -276,7 +275,7 @@ public class PlayerControl : MonoBehaviour
             yield return null;
         }
     }
-    public void ShotMis()//히히 미사일 발사
+    public void ShotMis()// 미사일 발사
     {
         Instantiate(mis, misPos.position, dir.rotation * Quaternion.Euler(0, -90, 0)).GetComponent<Rigidbody>().velocity = rigid.velocity;
     }

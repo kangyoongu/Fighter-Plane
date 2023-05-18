@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
+        Application.targetFrameRate = 60;
     }
     private void Start()
     {
@@ -37,7 +38,6 @@ public class GameManager : MonoBehaviour
        // PlayerControl.Instance.tire.SetBool("IsSky", true);
        // PlayerControl.Instance.miss.SetBool("Shot", false);
         FindEnemy.Instance.canShot = false;
-        EnemyMaker.enemyCount = 0;
         SceneManager.LoadScene(0);
     }
 }

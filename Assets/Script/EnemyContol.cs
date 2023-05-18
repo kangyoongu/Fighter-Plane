@@ -28,6 +28,9 @@ public class EnemyContol : MonoBehaviour
     {
         speed += Random.Range(-0.5f, 0.5f);
         speeds += Random.Range(-1000, 1000);
+        startTime = 0;
+        damage = 0;
+        power = 1;
         Instantiate(enemini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
     }
 
@@ -90,12 +93,11 @@ public class EnemyContol : MonoBehaviour
             t.localScale = new Vector3(5, 5, 5);
             power -= 0.04f;
             damage++;
-            ScoreManager.Instance.Score += 500;
+            ScoreManager.Instance.Score += 250;
             if (damage >= 20)
             {
                 StartCoroutine(Die());
             }
-            Destroy(collision.gameObject);
         }
         else if(collision.gameObject.tag == "Player")
         {

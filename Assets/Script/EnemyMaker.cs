@@ -8,10 +8,13 @@ public class EnemyMaker : MonoBehaviour
     public GameObject enemy;
     public static int enemyCount = 0;
     float time = 100;
+    private void Start()
+    {
+        enemyCount = 0;   
+    }
     void Update()
     {
         time += Time.deltaTime;
-        print(enemyCount);
         if(GameManager.Instance.gameOver == false)
         {
             if(enemyCount < 5)

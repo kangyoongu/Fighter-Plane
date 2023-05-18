@@ -6,7 +6,7 @@ public class EnemyBullet : MonoBehaviour
 {
     private void Start()
     {
-        Destroy(gameObject, 20);
+        Destroy(gameObject, 10);
     }
     public void OnCollisionEnter(Collision collision)
     {

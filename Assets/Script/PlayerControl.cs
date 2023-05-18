@@ -44,6 +44,7 @@ public class PlayerControl : MonoBehaviour
     float sTime = 0;
     public ParticleSystem[] flares;//c
     float flaresTime = 0;
+    int bulCount = 0;
     private void Awake()
     {
         if(Instance == null)
@@ -54,9 +55,15 @@ public class PlayerControl : MonoBehaviour
     private void Start()
     {
         rigid = GetComponent<Rigidbody>();
+        bulCount = 0;
+        flaresTime = 0;
+        power = 1;
+        angle = 0;
+        damage = 0;
     }
     private void Update()
     {
+        Debug.Log(bulCount);
         if (GameManager.Instance.gameOver == false)
         {
             velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
@@ -83,7 +90,7 @@ public class PlayerControl : MonoBehaviour
         if (playState == State2.FLY)
         {
             Sky();
-            StartCoroutine(ShotBullet());
+            StartCoroutine("ShotBullet");
             if (misTime >= 4)
             {
                 if (FindEnemy.Instance.canShot == true)
@@ -125,21 +132,28 @@ public class PlayerControl : MonoBehaviour
     {
         if (velocity >= 40)
         {
-            pitch = -camSpeed * Input.GetAxis("Mouse Y"); // 마우스y값을 지속적으로 받을 변수
+            pitch = -camSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime * 60; // 마우스y값을 지속적으로 받을 변수
             pitch = Mathf.Clamp(pitch, -900, 900);
             rigid.AddTorque(dir.right * pitch);
-            turn = -camSpeed * Input.GetAxis("Mouse X"); // 마우스로 방향조정
+            turn = -camSpeed * Input.GetAxis("Mouse X") * Time.deltaTime * 60; // 마우스로 방향조정
             turn = Mathf.Clamp(turn, -900, 900);
             rigid.AddTorque(dir.forward * turn);//끝
         }
     }
     private IEnumerator ShotBullet()//총 쏨
     {
-        if (Input.GetMouseButton(0))
+        if(bulCount >= 150)
         {
-            yield return new WaitForSeconds(Random.Range(0.03f, 0.05f));
-            Instantiate(bullet, bulPoint[0].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
-            Instantiate(bullet, bulPoint[1].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
+            yield return new WaitForSeconds(7);
+            bulCount = 0;
+            StopCoroutine("ShotBullet");
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            yield return new WaitForSeconds(Random.Range(0.2f, 0.3f));
+            Instantiate(bullet, bulPoint[0].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 3500);
+            Instantiate(bullet, bulPoint[1].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 3500);
+            bulCount++;
         }
         yield return null;
     }
@@ -148,7 +162,7 @@ public class PlayerControl : MonoBehaviour
     {
         if(!(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))) // 부스터 안쓰고있으면
         {
-            rigid.AddForce(Vector3.down * 1200);//떨어짐
+            rigid.AddForce(Vector3.down * 1500);//떨어짐
         }
         if (Input.GetKey(KeyCode.W))
         {
@@ -248,7 +262,6 @@ public class PlayerControl : MonoBehaviour
             t.localScale = new Vector3(5, 5, 5);
             power -= 0.04f;
             damage++;
-            Destroy(collision.gameObject);
         }
         if (canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy" && collision.gameObject.tag != "EnemyMis")
         {

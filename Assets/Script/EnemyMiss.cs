@@ -1,25 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.VFX;
 public class EnemyMiss : MonoBehaviour
 {
     public Transform target;
-    public float speed = 10;
+    public float speed;
     public GameObject exp;
     public GameObject mini;
     float time = 0;
+    ConstantForce cf;
+    bool isEnd = false;
     private void Start()
     {
         Instantiate(mini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
+        cf = GetComponent<ConstantForce>();
     }
     void Update()
     {
-        FollowTarget();
-        time += Time.deltaTime;
-        if(time >= 20)
+        if (isEnd == false)
         {
-            DieMis();
+            FollowTarget();
+            time += Time.deltaTime;
+        }
+        if (time >= 20)
+        {
+            if (isEnd == false)
+            {
+                isEnd = true;
+                cf.relativeForce = Vector3.zero;
+                cf.force = new Vector3(0, -100, 0);
+                gameObject.GetComponent<Rigidbody>().drag = 0.5f;
+                transform.GetChild(1).GetChild(0).GetComponent<VisualEffect>().Stop();
+            }
         }
     }
     void FollowTarget()
@@ -44,7 +57,7 @@ public class EnemyMiss : MonoBehaviour
     }
     public void OnParticleCollision(GameObject other)
     {
-        ScoreManager.Instance.Score += 70;
+        ScoreManager.Instance.Score += 7;
         DieMis();
     }
     private void DieMis()

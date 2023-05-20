@@ -1,23 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.VFX;
 public class PlayerMiss : MonoBehaviour
 {
     private Transform target;
     public float speed = 10;
     public GameObject exp;
     public GameObject mini;
+    float time = 0;
+    ConstantForce cf;
+    bool isEnd = false;
     private void Start()
     {
-        Destroy(gameObject, 50f);
         target = FindEnemy.Instance.target;
         Instantiate(mini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
+        cf = GetComponent<ConstantForce>();
     }
     void Update()
     {
-        FollowTarget();
-
+        if (isEnd == false)
+        {
+            FollowTarget();
+            time += Time.deltaTime;
+        }
+        if (time >= 30)
+        {
+            if (isEnd == false)
+            {
+                isEnd = true;
+                cf.relativeForce = Vector3.zero;
+                cf.force = new Vector3(0, -100, 0);
+                gameObject.GetComponent<Rigidbody>().drag = 0.5f;
+                transform.GetChild(1).GetChild(0).GetComponent<VisualEffect>().Stop();
+            }
+        }
     }
     void FollowTarget()
     {

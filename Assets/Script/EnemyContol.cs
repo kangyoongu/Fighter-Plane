@@ -39,7 +39,7 @@ public class EnemyContol : MonoBehaviour
         if (gameObject.name != "Enemy Variant")
         {
             startTime += Time.deltaTime;
-            if (startTime < 7)
+            if (startTime < 6)
             {
                 rigid.AddForce(Vector3.up * Time.deltaTime * 700000);
             }
@@ -59,19 +59,19 @@ public class EnemyContol : MonoBehaviour
         float dis = Vector3.Distance(transform.position, target.position);
         if (dis >= 1500)
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 110 * power);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 200 * power);
             jet[0].Play();
             jet[1].Play();
         }
-        else if (dis <= 800)
+        else if (dis <= 400)
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 50 * power);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 55 * power);
             jet[0].Stop();
             jet[1].Stop();
         }
         else
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 80 * power);
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 120 * power);
             jet[0].Play();
             jet[1].Play();
         }
@@ -83,7 +83,7 @@ public class EnemyContol : MonoBehaviour
             Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
             Destroy(collision.gameObject);
             FindEnemy.Instance.canShot = false;
-            ScoreManager.Instance.Score += 100;
+            ScoreManager.Instance.Score += 10;
             StartCoroutine(Die());
         }
         else if(collision.gameObject.tag == "Bullet")
@@ -93,7 +93,8 @@ public class EnemyContol : MonoBehaviour
             t.localScale = new Vector3(5, 5, 5);
             power -= 0.04f;
             damage++;
-            ScoreManager.Instance.Score += 250;
+            Destroy(collision.gameObject);
+            ScoreManager.Instance.Score += 25;
             if (damage >= 20)
             {
                 StartCoroutine(Die());

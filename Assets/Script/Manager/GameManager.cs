@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public bool gameOver = true;
+    float playTime = 0;
+    private TierManager tierManager;
+    public int num = 0;
     public void Awake()
     {
         if(Instance == null)
@@ -13,6 +16,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
         Application.targetFrameRate = 60;
+        tierManager = FindAnyObjectByType<TierManager>();
     }
     private void Start()
     {
@@ -21,6 +25,18 @@ public class GameManager : MonoBehaviour
         if (!PlayerPrefs.HasKey("Tutorial") && SceneManager.GetActiveScene().name == "Playing")
         {
             SceneManager.LoadScene(1);
+        }
+        EnemyMaker.maxEnemy = 5 + tierManager.tierNum * 2;
+        EnemyMaker.makeTime = 30 - tierManager.tierNum * 4;
+
+    }
+    private void Update()
+    {
+        tierManager.Tier = num;
+        if(gameOver == false)
+        {
+            playTime += Time.deltaTime;
+            Debug.Log(playTime);
         }
     }
     public void OnClickStart()
@@ -35,8 +51,6 @@ public class GameManager : MonoBehaviour
     public IEnumerator ReStart()
     {
         yield return new WaitForSeconds(3);
-       // PlayerControl.Instance.tire.SetBool("IsSky", true);
-       // PlayerControl.Instance.miss.SetBool("Shot", false);
         FindEnemy.Instance.canShot = false;
         SceneManager.LoadScene(0);
     }

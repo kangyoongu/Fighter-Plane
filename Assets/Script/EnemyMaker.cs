@@ -7,7 +7,9 @@ public class EnemyMaker : MonoBehaviour
     public Transform[] points;
     public GameObject enemy;
     public static int enemyCount = 0;
-    float time = 100;
+    public static int maxEnemy = 0;
+    public static int makeTime = 0;
+    public float time = 100;
     private void Start()
     {
         enemyCount = 0;   
@@ -17,14 +19,14 @@ public class EnemyMaker : MonoBehaviour
         time += Time.deltaTime;
         if(GameManager.Instance.gameOver == false)
         {
-            if(enemyCount < 5)
+            if(enemyCount < maxEnemy)
             {
-                if(enemyCount < 4)
+                if(enemyCount < maxEnemy-1)
                 {
                     enemyCount += 1;
                     Instantiate(enemy, points[Random.Range(0, points.Length)].position, Quaternion.Euler(-90, 0, 0));
                 }
-                else if (time >= 30)
+                else if (time >= makeTime)
                 {
                     enemyCount += 1;
                     Instantiate(enemy, points[Random.Range(0, points.Length)].position, Quaternion.Euler(-90, 0, 0));

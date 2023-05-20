@@ -22,7 +22,7 @@ public class EnemyAttack : MonoBehaviour
     private void Update()
     {
         misTime += Time.deltaTime;
-        if(misTime >= 15)
+        if(misTime >= 16)
         {
             if(shot == true)
             {
@@ -52,7 +52,7 @@ public class EnemyAttack : MonoBehaviour
         {
             if (shot == true)
             {
-                yield return new WaitForSeconds(Random.Range(0.2f, 0.1f));
+                yield return new WaitForSeconds(Random.Range(0.2f, 0.3f));
                 Instantiate(bullet, bulPoint[0].position, root.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
                 Instantiate(bullet, bulPoint[1].position, root.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
             }

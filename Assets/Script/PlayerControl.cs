@@ -63,7 +63,6 @@ public class PlayerControl : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(bulCount);
         if (GameManager.Instance.gameOver == false)
         {
             velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
@@ -99,7 +98,7 @@ public class PlayerControl : MonoBehaviour
                     misTime = 0;
                 }
             }
-            if(flaresTime > 6)
+            if(flaresTime > 5)
             {
                 ShotFlares();
             }
@@ -133,10 +132,10 @@ public class PlayerControl : MonoBehaviour
         if (velocity >= 40)
         {
             pitch = -camSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime * 60; // 마우스y값을 지속적으로 받을 변수
-            pitch = Mathf.Clamp(pitch, -900, 900);
+            pitch = Mathf.Clamp(pitch, -1000, 1000);
             rigid.AddTorque(dir.right * pitch);
             turn = -camSpeed * Input.GetAxis("Mouse X") * Time.deltaTime * 60; // 마우스로 방향조정
-            turn = Mathf.Clamp(turn, -900, 900);
+            turn = Mathf.Clamp(turn, -1000, 1000);
             rigid.AddTorque(dir.forward * turn);//끝
         }
     }
@@ -162,7 +161,7 @@ public class PlayerControl : MonoBehaviour
     {
         if(!(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))) // 부스터 안쓰고있으면
         {
-            rigid.AddForce(Vector3.down * 1500);//떨어짐
+            rigid.AddForce(Vector3.down * 2000);//떨어짐
         }
         if (Input.GetKey(KeyCode.W))
         {
@@ -253,15 +252,16 @@ public class PlayerControl : MonoBehaviour
     {
         if(collision.gameObject.tag == "EnemyBullet")
         {
-            if(damage >= 20)
-            {
-                Die();
-            }
             Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
             t.parent = transform.GetChild(0);
             t.localScale = new Vector3(5, 5, 5);
             power -= 0.04f;
             damage++;
+            Destroy(collision.gameObject);
+            if (damage >= 20)
+            {
+                Die();
+            }
         }
         if (canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy" && collision.gameObject.tag != "EnemyMis")
         {

@@ -280,7 +280,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 17.41
+      scalar: 6.87
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5076,7 +5076,7 @@ ConstantForce:
   m_GameObject: {fileID: 6856543709614451417}
   m_Enabled: 1
   m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 6000, y: 0, z: 0}
+  m_RelativeForce: {x: 4800, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!114 &3546310810527913147
@@ -5092,7 +5092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  speed: 2
+  speed: 1.5
   exp: {fileID: 247653057124291437, guid: 6db0ee0e1c2caed419c5169d7ea232ad, type: 3}
   mini: {fileID: 2427427828930524895, guid: 992006de850391340b8bc4d89b10341a, type: 3}
 --- !u!4 &6858189110841240321 stripped

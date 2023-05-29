@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
+using DG.Tweening;
+
 public enum TState : short
 {
     GROUND = 0,
@@ -21,6 +25,7 @@ public class TPlayerControl : MonoBehaviour
 
     public float camSpeed = 9.0f; // 화면이 움직이는 속도 변수
     float pitch = 0;
+    float turn = 0;
     public Transform child;//c
     public Transform dir;//c
     public GameObject model;//c
@@ -42,50 +47,127 @@ public class TPlayerControl : MonoBehaviour
     float power = 1;
     float sTime = 0;
     public ParticleSystem[] flares;//c
+    public VisualEffect sonic; // c
+    public AudioSource shotBulletAudio;//c
+    public AudioSource[] reload;//c
+    public AudioSource sonicsound;//c
+    public AudioSource boost;//c
+    public AudioSource flaresound;
     float flaresTime = 0;
+    int bulCount = 0;
+    public Volume damagePost;
+    public Image background;
+    bool isDie = false;
+    float sonicCool = 0;
+    bool startsonic = false;
+    bool over140 = false;
+    bool doboost = false;
+    private Tweener tweener;
+    bool gameOver = false;
+    Stack<GameObject> smokes = new Stack<GameObject>();
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
     }
     private void Start()
     {
-        rigid = GetComponent<Rigidbody>();
+        gameOver = false;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        rigid = GetComponent<Rigidbody>();
+        bulCount = 0;
+        flaresTime = 0;
+        power = 1;
+        angle = 0;
+        damage = 0;
+        StartCoroutine("ShotBullet");
     }
     private void Update()
     {
-        velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
-        if(TutorialManager.Instance.level == 2)
+        if (gameOver == false)
         {
-            if(velocity >= 50)
+            velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
+            if (TutorialManager.Instance.level == 2)
             {
-                StartCoroutine(TutorialManager.Instance.ThreeSet());
+                if (velocity >= 50)
+                {
+                    StartCoroutine(TutorialManager.Instance.ThreeSet());
+                }
+            }
+            if (startsonic == false)
+            {
+                sonicCool += Time.deltaTime;
+                if (sonicCool > 7)
+                {
+                    startsonic = true;
+                    sonicCool = 0;
+                }
+            }
+            else
+            {
+                if (velocity >= 151 && over140 == false)
+                {
+                    over140 = true;
+                    sonicsound.Play();
+                }
+                if (over140 == true)
+                {
+                    if (velocity >= 141)
+                    {
+                        sonic.Play();
+                        StartCoroutine(StartTween());
+                    }
+                    else if (velocity >= 134)
+                    {
+                        sonic.Stop();
+                    }
+                    else
+                    {
+                        sonic.Stop();
+                        StartCoroutine(DelayStop());
+                        over140 = false;
+                        startsonic = false;
+                        sonicCool = 0;
+                    }
+                }
+            }
+            if ((short)playState < 2)
+            {
+                if (canDie == false)
+                {
+                    DieCheck();
+                }
+
+                if (transform.position.y < 20)//바퀴 관리
+                    tire.SetBool("IsSky", false);
+                else
+                    tire.SetBool("IsSky", true);
+                
+
+                CamTurn();//카메라 회전
+                misTime += Time.deltaTime;
+                sTime += Time.deltaTime;
+                flaresTime += Time.deltaTime;
+                States(); // 상태 판단
             }
         }
-        if ((short)playState < 2)
+        if (isDie == true)
         {
-            if (canDie == false)
-            {
-                DieCheck();
-            }
-
-            if(transform.position.y < 20)//바퀴 관리
-                tire.SetBool("IsSky", false);
-
-            CamTurn();//카메라 회전
-            if (TutorialManager.Instance.level >= 4)
-            {
-                StartCoroutine(ShotBullet());
-            }
-            misTime += Time.deltaTime; 
-            sTime += Time.deltaTime;
-            flaresTime += Time.deltaTime;
-            States(); // 상태 판단
+            background.color = new Color(0, 0, 0, background.color.a + Time.deltaTime * 0.33f);
         }
+    }
+    IEnumerator DelayStop()
+    {
+        yield return new WaitForSeconds(0.1f);
+        sonicsound.Stop();
+    }
+    private IEnumerator StartTween()
+    {
+        ShakeManager.Instance.Shake(1, 3);
+        yield return null;
     }
     private void States()//각 상태에 따라 할 일;
     {
@@ -93,10 +175,6 @@ public class TPlayerControl : MonoBehaviour
         {
             if (TutorialManager.Instance.level >= 3)
             {
-                if (TutorialManager.Instance.level == 3)
-                {
-                    StartCoroutine(TutorialManager.Instance.FourSet());
-                }
                 Sky();
                 if (misTime >= 4)
                 {
@@ -106,7 +184,7 @@ public class TPlayerControl : MonoBehaviour
                         misTime = 0;
                     }
                 }
-                if (flaresTime > 6)
+                if (flaresTime > 5)
                 {
                     ShotFlares();
                 }
@@ -124,6 +202,7 @@ public class TPlayerControl : MonoBehaviour
         {
             flares[0].Play();
             flares[1].Play();
+            flaresound.Play();
             flaresTime = 0;
         }
     }
@@ -138,22 +217,42 @@ public class TPlayerControl : MonoBehaviour
     }
     private void CamTurn()
     {
-        if (rigid.useGravity == false)
+        if (velocity >= 40)
         {
-            pitch = -camSpeed * Input.GetAxis("Mouse Y"); // 마우스y값을 지속적으로 받을 변수
-            pitch = Mathf.Clamp(pitch, -420, 420);
+            pitch = -camSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime * 60; // 마우스y값을 지속적으로 받을 변수
+            pitch = Mathf.Clamp(pitch, -1200, 1200);
             rigid.AddTorque(dir.right * pitch);
+            turn = -camSpeed * Input.GetAxis("Mouse X") * Time.deltaTime * 60; // 마우스로 방향조정
+            turn = Mathf.Clamp(turn, -1200, 1200);
+            rigid.AddTorque(dir.forward * turn);//끝
         }
     }
     private IEnumerator ShotBullet()//총 쏨
     {
-        if (Input.GetMouseButton(0))
+        while (true)
         {
-            yield return new WaitForSeconds(Random.Range(0.03f, 0.05f));
-            Instantiate(bullet, bulPoint[0].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
-            Instantiate(bullet, bulPoint[1].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
+            if (bulCount >= 150)
+            {
+                yield return new WaitForSeconds(7);
+                bulCount = 0;
+                reload[0].Stop();
+            }
+            else if (Input.GetMouseButton(0) && playState == TState.FLY)
+            {
+                shotBulletAudio.Play();
+                Instantiate(bullet, bulPoint[0].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 3500);
+                Instantiate(bullet, bulPoint[1].position, child.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 3500);
+                bulCount++;
+                if (bulCount >= 150)
+                {
+                    reload[0].Play();
+                    reload[1].Play();
+                }
+                ShakeManager.Instance.Shake(0, 4);
+                yield return new WaitForSeconds(Random.Range(0.02f, 0.05f));
+            }
+            yield return null;
         }
-        yield return null;
     }
 
     private void Sky()
@@ -162,29 +261,30 @@ public class TPlayerControl : MonoBehaviour
         {
             if (!(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))) // 부스터 안쓰고있으면
             {
-                rigid.AddForce(Vector3.down * 300);//떨어짐
+                rigid.AddForce(Vector3.down * 2500 * Time.deltaTime * 60);//떨어짐
+            }
+            
+            if (Input.GetKeyDown(KeyCode.C)) // 급상승
+            {
+                if (sTime >= 4)
+                {
+                    rigid.AddTorque(dir.right * -90000);
+                    sTime = 0;
+                }
             }
             if (Input.GetKey(KeyCode.W))
             {
                 rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 90 * power);
             }
-            if (Input.GetKeyDown(KeyCode.S)) // 급상승
-            {
-                if (sTime >= 4)
-                {
-                    rigid.AddTorque(dir.right * -28000);
-                    sTime = 0;
-                }
-            }
-            if (Input.GetKey(KeyCode.D))//회전
+            /*if (Input.GetKey(KeyCode.D))//회전
             {
                 angle = Mathf.Lerp(angle, -100, Time.deltaTime * 5);
             }
             else if (Input.GetKey(KeyCode.A))
             {
                 angle = Mathf.Lerp(angle, 100, Time.deltaTime * 5);
-            }
-            else if (Input.GetKey(KeyCode.Q))
+            }*/
+            if (Input.GetKey(KeyCode.Q))
             {
                 angle = Mathf.Lerp(angle, 700, Time.deltaTime * 5);
             }
@@ -201,45 +301,7 @@ public class TPlayerControl : MonoBehaviour
             {
                 SetAngle();
             }
-        }
-    }
-
-    private void Ground()
-    {
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.Translate(Vector3.forward * Time.deltaTime * speed * 0.06f);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.Translate(Vector3.forward * Time.deltaTime * -speed * 0.06f);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Rotate(Vector3.up * -speed * Time.deltaTime * 0.1f);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Rotate(Vector3.up * speed * Time.deltaTime * 0.1f);
-        }
-        Shift();
-    }
-    private void Shift()
-    {
-        if (TutorialManager.Instance.level >= 2)
-        {
-            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
-            {
-                rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 80 * power);
-                jet[0].Play();
-                jet[1].Play();
-            }
-            else
-            {
-                jet[0].Stop();
-                jet[1].Stop();
-            }
-            if (velocity >= 50)
+            if (velocity >= 60)
             {
                 rigid.useGravity = false;
             }
@@ -249,34 +311,102 @@ public class TPlayerControl : MonoBehaviour
             }
         }
     }
+
+    private void Ground()
+    {
+        if (velocity >= 55)
+        {
+            rigid.useGravity = false;
+        }
+        else
+        {
+            rigid.useGravity = true;
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * speed * 0.01f);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * -speed * 0.01f);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Rotate(Vector3.up * -speed * Time.deltaTime * 0.015f);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Rotate(Vector3.up * speed * Time.deltaTime * 0.015f);
+        }
+        Shift();
+    }
+    private void Shift()
+    {
+        if (TutorialManager.Instance.level >= 2)
+        {
+            if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
+            {
+                rigid.AddRelativeForce(Vector3.forward * speed * Time.deltaTime * 70 * power);
+                if (doboost == false)
+                {
+                    doboost = true;
+                    jet[0].Play();
+                    jet[1].Play();
+                }
+                if (tweener != null && tweener.IsActive())
+                {
+                    tweener.Kill();
+                }
+                boost.volume = 0.13f;
+            }
+            else
+            {
+                if (doboost == true)
+                {
+                    float currentValue = 0.13f;
+                    tweener = DOTween.To(() => currentValue, x => currentValue = x, 0, 0.3f).SetEase(Ease.Linear)
+                    .OnUpdate(() =>
+                    {
+                        boost.volume = currentValue;
+
+                    });
+                }
+                doboost = false;
+                jet[0].Stop();
+                jet[1].Stop();
+            }
+        }
+    }
     void SetAngle()
     {
-        child.localRotation = Quaternion.Euler(0, 0, angle * Time.deltaTime  + child.localEulerAngles.z);
+        child.localRotation = Quaternion.Euler(0, 0, angle * Time.deltaTime + child.localEulerAngles.z);
     }
     public void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "EnemyBullet")
+        if (collision.gameObject.tag == "EnemyBullet")
         {
-            if(damage >= 20)
-            {
-                StartCoroutine(Die());
-            }
             Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
             t.parent = transform.GetChild(0);
             t.localScale = new Vector3(5, 5, 5);
-            power -= 0.04f;
+            smokes.Push(t.gameObject);
+            power -= 0.02f;
             damage++;
+            damagePost.weight += (20 - damage) * 0.00476f;
             Destroy(collision.gameObject);
+            if (damage >= 20)
+            {
+                StartCoroutine(Die());
+            }
         }
-        if (velocity > 50 && canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy")
+        if(collision.gameObject.tag == "EnemyMis")
+        {
+            collision.gameObject.GetComponent<EnemyMiss>().DieMis();
+            StartCoroutine(Die());
+        }
+        if (canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy")
         {
             StartCoroutine(Die());
         }
-        /*else if(velocity <= 50)
-        {
-            canDie = false;
-            playState = State.GROUND;
-        }*/
     }
     public void OnTriggerEnter(Collider other)
     {
@@ -289,7 +419,6 @@ public class TPlayerControl : MonoBehaviour
         if (other.gameObject.name == "p2")
         {
             other.gameObject.SetActive(false);
-            StopCoroutine(TutorialManager.Instance.FourSet());
             StartCoroutine(TutorialManager.Instance.FiveSet());
         }
     }
@@ -301,20 +430,36 @@ public class TPlayerControl : MonoBehaviour
             g = Instantiate(dieParticel, transform.position, Quaternion.identity);
             g.transform.position = transform.position;
             g.transform.rotation = transform.rotation;
-            Destroy(g, 3);
+            Destroy(g, 6);
             g.GetComponentInChildren<Rigidbody>().velocity = rigid.velocity;
             rigid.isKinematic = true;
+            gameOver = true;
             model.SetActive(false);
+            isDie = true;
+            ShakeManager.Instance.ExpMe();
             yield return new WaitForSecondsRealtime(3);
             if (TutorialManager.Instance.level < 6)
             {
+                gameOver = false;
+                isDie = false;
                 canDie = false;
                 angle = 0;
                 TutorialManager.Instance.Restart();
                 model.SetActive(true);
                 StopAllCoroutines();
                 model.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                background.color = new Color(0, 0, 0, 0);
                 rigid.isKinematic = false;
+                TutorialManager.Instance.die = true;
+                power = 1;
+                damage = 0;
+                damagePost.weight = 0;
+                StartCoroutine("ShotBullet");
+                while (smokes != null)
+                {
+                    GameObject a = smokes.Pop();
+                    Destroy(a);
+                }
             }
         }
         else
@@ -322,7 +467,7 @@ public class TPlayerControl : MonoBehaviour
             yield return null;
         }
     }
-    public void ShotMis()//히히 미사일 발사
+    public void ShotMis()// 미사일 발사
     {
         Instantiate(mis, misPos.position, dir.rotation * Quaternion.Euler(0, -90, 0)).GetComponent<Rigidbody>().velocity = rigid.velocity;
     }

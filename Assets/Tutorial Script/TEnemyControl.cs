@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class TEnemyControl : MonoBehaviour
 {
@@ -11,31 +10,48 @@ public class TEnemyControl : MonoBehaviour
     private GameObject dieParticel;
     public GameObject exp;
     private GameObject g = null;
+    float dis = 0;
+    bool cut = false;
+    IEnumerator sh(int x, float y)
+    {
+        ShakeManager.Instance.Shake(x, y);
+        yield return null;
+    }
     public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Mis")
         {
-            Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
-            TutorialManager.Instance.SixSet();
-            FindEnemy.Instance.canShot = false;
-            Destroy(collision.gameObject);
-            StartCoroutine(Die());
+            if (cut == false)
+            {
+                cut = true;
+                Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
+                Destroy(collision.gameObject);
+                FindEnemy.Instance.canShot = false;
+                HitEnemy.Instance.hitEnemy();
+                TutorialManager.Instance.SixSet();
+                if (((1000 - dis) * 0.005f) >= 2)
+                {
+                    StartCoroutine(sh(4, (1200 - dis) * 0.005f));
+                }
+                StartCoroutine(Die());
+            }
         }
         else if (collision.gameObject.tag == "Bullet")
         {
+            Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
+            t.parent = transform;
+            t.localScale = new Vector3(5, 5, 5);
+            Destroy(collision.gameObject);
+            HitEnemy.Instance.hitEnemy();
+            ScoreManager.Instance.Score += 7;
             if (damage >= 20)
             {
                 StartCoroutine(Die());
             }
-            Transform t = Instantiate(smoke, collision.contacts[0].point, Quaternion.identity).transform;
-            t.parent = transform;
-            t.localScale = new Vector3(5, 5, 5);
-            damage++;
-            Destroy(collision.gameObject);
         }
         else if (collision.gameObject.tag == "Player")
         {
-            StartCoroutine(TPlayerControl.Instance.Die());
+            TPlayerControl.Instance.Die();
         }
         else
         {

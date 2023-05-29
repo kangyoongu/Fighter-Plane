@@ -7,8 +7,8 @@ public class EnemyMaker : MonoBehaviour
     public Transform[] points;
     public GameObject enemy;
     public static int enemyCount = 0;
-    public static int maxEnemy = 0;
-    public static int makeTime = 0;
+    public static float maxEnemy = 0;
+    public static float makeTime = 0;
     public float time = 100;
     private void Start()
     {

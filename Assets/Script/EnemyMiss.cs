@@ -11,6 +11,7 @@ public class EnemyMiss : MonoBehaviour
     float time = 0;
     ConstantForce cf;
     bool isEnd = false;
+    bool cut = false;
     private void Start()
     {
         Instantiate(mini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
@@ -55,12 +56,23 @@ public class EnemyMiss : MonoBehaviour
             DieMis();
         }
     }
+    IEnumerator sh(int x, float y)
+    {
+        ShakeManager.Instance.Shake(x, y);
+        yield return null;
+    }
     public void OnParticleCollision(GameObject other)
     {
-        ScoreManager.Instance.Score += 7;
-        DieMis();
+        if (cut == false)
+        {
+            ScoreManager.Instance.Score += 5;
+            HitEnemy.Instance.hitEnemy();
+            cut = true;
+            StartCoroutine(sh(3, 6));
+            DieMis();
+        }
     }
-    private void DieMis()
+    public void DieMis()
     {
         Destroy(Instantiate(exp, transform.position, Quaternion.identity), 7);
         Destroy(gameObject);

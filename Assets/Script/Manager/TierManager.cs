@@ -20,6 +20,7 @@ public class TierManager : MonoBehaviour
     Color32[] outlineColor = { new Color32(116, 27, 12, 255), new Color32(96, 95, 107, 255), new Color32(190, 115, 0, 255), new Color32(10, 202, 202, 255), new Color32(20, 33, 255, 255)};
     Color32[] inColor = { new Color32(132, 59, 35, 255), new Color32(128, 127, 135, 255), new Color32(179, 143, 0, 255), new Color32(14, 186, 186, 255), new Color32(53, 72, 204, 255)};
     public GameObject[] tierImage;
+    public AudioSource click;
     public int tierNum;
     public int Tier
     {
@@ -87,19 +88,21 @@ public class TierManager : MonoBehaviour
     }
     private void Awake()
     {
-        PlayerPrefs.DeleteKey("Tier");
         if (!PlayerPrefs.HasKey("Tier"))
         {
             PlayerPrefs.SetInt("Tier", 0);
+            PlayerPrefs.SetInt("isUp", 0);
         }
         Tier = Tier;
     }
     public void OnClickTierOn()
     {
         showTier.SetActive(true);
+        click.Play();
     }
     public void OnClickTierOff()
     {
         showTier.SetActive(false);
+        click.Play();
     }
 }

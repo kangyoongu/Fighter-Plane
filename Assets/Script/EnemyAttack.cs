@@ -11,6 +11,8 @@ public class EnemyAttack : MonoBehaviour
     public Transform target;
     public GameObject mis;
     float misTime = 0;
+    public float misCool = 0;
+    public AudioSource b;
     private void Awake()
     {
         root = transform.root;
@@ -22,7 +24,7 @@ public class EnemyAttack : MonoBehaviour
     private void Update()
     {
         misTime += Time.deltaTime;
-        if(misTime >= 16)
+        if(misTime >= misCool)
         {
             if(shot == true)
             {
@@ -35,8 +37,8 @@ public class EnemyAttack : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            shot = true;
             target = other.transform;
+            shot = true;
         }
     }
     public void OnTriggerExit(Collider other)
@@ -53,6 +55,9 @@ public class EnemyAttack : MonoBehaviour
             if (shot == true)
             {
                 yield return new WaitForSeconds(Random.Range(0.2f, 0.3f));
+                /*ObjectPool.instance.GetObject(bulPoint[0].position, root.rotation * Quaternion.Euler(90, 0, 0));
+                ObjectPool.instance.GetObject(bulPoint[1].position, root.rotation * Quaternion.Euler(90, 0, 0));*/
+                b.Play();
                 Instantiate(bullet, bulPoint[0].position, root.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
                 Instantiate(bullet, bulPoint[1].position, root.rotation * Quaternion.Euler(90, 0, 0)).GetComponent<Rigidbody>().AddRelativeForce(Vector3.up * 4000);
             }

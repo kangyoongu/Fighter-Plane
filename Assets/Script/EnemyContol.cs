@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class EnemyContol : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class EnemyContol : MonoBehaviour
     public float speed;
     public float speeds;
     private Rigidbody rigid;
-    public VisualEffect[] jet;
     int damage = 0;
     public GameObject smoke;
     [SerializeField]
@@ -19,7 +17,8 @@ public class EnemyContol : MonoBehaviour
     private GameObject g = null;
     float startTime = 0;
     public GameObject enemini;
-    private Transform mymini;
+    float dis = 0;
+    bool cut = false;
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
@@ -56,35 +55,43 @@ public class EnemyContol : MonoBehaviour
             Vector3 dir = target.transform.position - transform.position;
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir, Vector3.right), Time.deltaTime * speed);
         }
-        float dis = Vector3.Distance(transform.position, target.position);
+        dis = Vector3.Distance(transform.position, target.position);
         if (dis >= 1500)
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 200 * power);
-            jet[0].Play();
-            jet[1].Play();
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 180 * power);
         }
         else if (dis <= 400)
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 55 * power);
-            jet[0].Stop();
-            jet[1].Stop();
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 75 * power);
         }
         else
         {
-            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 120 * power);
-            jet[0].Play();
-            jet[1].Play();
+            rigid.AddRelativeForce(Vector3.forward * Time.deltaTime * speeds * 100 * power);
         }
+    }
+    IEnumerator sh(int x, float y)
+    {
+        ShakeManager.Instance.Shake(x, y);
+        yield return null;
     }
     public void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Mis")
         {
-            Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
-            Destroy(collision.gameObject);
-            FindEnemy.Instance.canShot = false;
-            ScoreManager.Instance.Score += 10;
-            StartCoroutine(Die());
+            if (cut == false)
+            {
+                cut = true;
+                Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
+                Destroy(collision.gameObject);
+                FindEnemy.Instance.canShot = false;
+                ScoreManager.Instance.Score += 103;
+                HitEnemy.Instance.hitEnemy();
+                if (((1000 - dis) * 0.005f) >= 2)
+                {
+                    StartCoroutine(sh(4, (1200 - dis) * 0.01f));
+                }
+                StartCoroutine(Die());
+            }
         }
         else if(collision.gameObject.tag == "Bullet")
         {
@@ -94,7 +101,8 @@ public class EnemyContol : MonoBehaviour
             power -= 0.04f;
             damage++;
             Destroy(collision.gameObject);
-            ScoreManager.Instance.Score += 25;
+            HitEnemy.Instance.hitEnemy();
+            ScoreManager.Instance.Score += 7;
             if (damage >= 20)
             {
                 StartCoroutine(Die());
@@ -102,8 +110,8 @@ public class EnemyContol : MonoBehaviour
         }
         else if(collision.gameObject.tag == "Player")
         {
-            PlayerControl.Instance.Die();
             StartCoroutine(Die());
+            PlayerControl.Instance.Die();
         }
         else
         {

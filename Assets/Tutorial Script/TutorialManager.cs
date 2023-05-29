@@ -15,6 +15,7 @@ public class TutorialManager : MonoBehaviour
     private Rigidbody rigid;
     private Transform playerPos;
     public bool isStop = false;
+    public bool die = false;
     private void Awake()
     {
         if(Instance == null)
@@ -63,24 +64,31 @@ public class TutorialManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(1);
         Time.timeScale = 1;
         UIs[4].SetActive(false);
+        yield return new WaitForSecondsRealtime(3);
+        StartCoroutine("FourSet");
+
     }
-    public IEnumerator FourSet()
+    IEnumerator FourSet()
     {
         level = 4;
         UIs[5].SetActive(true);
         yield return new WaitForSecondsRealtime(5);
         UIs[5].SetActive(false);
         UIs[6].SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitWhile(() => !Input.GetMouseButtonDown(0));
+        yield return new WaitWhile(() => !Input.GetMouseButtonUp(0));
         UIs[6].SetActive(false);
         UIs[7].SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitWhile(() => !Input.GetKeyDown(KeyCode.F));
+        yield return new WaitWhile(() => !Input.GetKeyUp(KeyCode.F));
         UIs[7].SetActive(false);
         UIs[8].SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitWhile(() => !Input.GetKeyDown(KeyCode.C));
+        yield return new WaitWhile(() => !Input.GetKeyUp(KeyCode.C));
         UIs[8].SetActive(false);
         UIs[9].SetActive(true);
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitWhile(() => !Input.GetKeyDown(KeyCode.Q) && !Input.GetKeyDown(KeyCode.E));
+        yield return new WaitWhile(() => !Input.GetKeyUp(KeyCode.Q) && !Input.GetKeyUp(KeyCode.E));
         UIs[9].SetActive(false);
         UIs[10].SetActive(true);
     }
@@ -89,6 +97,11 @@ public class TutorialManager : MonoBehaviour
         level = 5;
         Time.timeScale = 0;
         isStop = true;
+        StopCoroutine("FourSet");
+        UIs[6].SetActive(false);
+        UIs[7].SetActive(false);
+        UIs[8].SetActive(false);
+        UIs[9].SetActive(false);
         UIs[10].SetActive(false);
         UIs[11].SetActive(true);
         yield return new WaitWhile(() => !Input.GetKeyDown(KeyCode.Tab));

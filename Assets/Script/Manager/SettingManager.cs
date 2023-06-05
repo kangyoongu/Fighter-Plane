@@ -3,18 +3,24 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class SettingManager : MonoBehaviour
 {
     public static SettingManager Instance;
-    public GameObject background;
+    public RectTransform background;
     public bool control = false;
     public TextMeshProUGUI conText;
     public AudioSource click;
+    public RectTransform canvas;
     public bool withkey = false;
+    Tweener set;
+    Vector3[] pos = { new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
     private void Awake()
     {
-        if(Instance == null)
+        pos[1].y = -canvas.sizeDelta.y - 100;
+        background.anchoredPosition = pos[1];
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -29,13 +35,21 @@ public class SettingManager : MonoBehaviour
     }
     public void OnClickSetting()
     {
-        background.SetActive(true);
+        if(set != null && set.IsActive()) { set.Kill(); }
+        set = background.DOAnchorPos(pos[0], 0.5f);
         click.Play();
     }
     public void OnClickX()
     {
-        background.SetActive(false);
+        if (set != null && set.IsActive()) { set.Kill(); }
+        set = background.DOAnchorPos(pos[1], 0.5f);
         click.Play();
+    }
+    public void OnClickMirror()
+    {
+        click.Play();
+        PlayerPrefs.SetInt("diraction", PlayerPrefs.GetInt("diraction") * -1);
+        PlayerControl.Instance.turndir = PlayerPrefs.GetInt("diraction");
     }
     public void OnClickControl()
     {

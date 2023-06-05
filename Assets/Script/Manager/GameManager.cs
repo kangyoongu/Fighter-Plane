@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     public AudioSource aud;
     public void Awake()
     {
-        PlayerPrefs.DeleteAll();
         if(Instance == null)
         {
             Instance = this;

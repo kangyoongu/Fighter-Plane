@@ -22,6 +22,7 @@ public class PlayerControl : MonoBehaviour
     float velocity = 0;
     public VisualEffect[] jet;
     int damage = 0;
+    public int turndir = 1;
 
     public float camSpeed = 9.0f; // 화면이 움직이는 속도 변수
     float pitch = 0;
@@ -63,7 +64,7 @@ public class PlayerControl : MonoBehaviour
     bool over140 = false;
     bool doboost = false;
     private Tweener tweener;
-    bool shot = false;
+    public GameObject esc;
     private void Awake()
     {
         if(Instance == null)
@@ -85,6 +86,13 @@ public class PlayerControl : MonoBehaviour
     {
         if (GameManager.Instance.gameOver == false)
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                Time.timeScale = 0;
+                esc.SetActive(true);
+            }
             velocity = Mathf.Sqrt(rigid.velocity.x * rigid.velocity.x + rigid.velocity.y * rigid.velocity.y + rigid.velocity.z * rigid.velocity.z);
             if(startsonic == false)
             {
@@ -104,12 +112,12 @@ public class PlayerControl : MonoBehaviour
                 }
                 if(over140 == true)
                 {
-                    if(velocity >= 141)
+                    if(velocity >= 151f)
                     {
                         sonic.Play();
                         StartCoroutine(StartTween());
                     }
-                    else if(velocity >= 134)
+                    else if(velocity >= 138f)
                     {
                         sonic.Stop();
                     }
@@ -207,7 +215,7 @@ public class PlayerControl : MonoBehaviour
         {
             pitch = -camSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime * 60; // 마우스y값을 지속적으로 받을 변수
             pitch = Mathf.Clamp(pitch, -1200, 1200);
-            rigid.AddTorque(dir.right * pitch);
+            rigid.AddTorque(dir.right * pitch * turndir);
             if (PlayerPrefs.GetInt("control") == 0) {
                 turn = -camSpeed * Input.GetAxis("Mouse X") * Time.deltaTime * 60; // 마우스로 방향조정
                 turn = Mathf.Clamp(turn, -1200, 1200);
@@ -406,5 +414,20 @@ public class PlayerControl : MonoBehaviour
     public void ShotMis()// 미사일 발사
     {
         Instantiate(mis, misPos.position, dir.rotation * Quaternion.Euler(0, -90, 0)).GetComponent<Rigidbody>().velocity = rigid.velocity;
+    }
+    public void OnClickReturn()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1;
+        esc.SetActive(false);
+    }
+    public void OnClickDone()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1;
+        esc.SetActive(false);
+        Die();
     }
 }

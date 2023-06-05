@@ -6,7 +6,7 @@ public class PlayerBullet : MonoBehaviour
 {
     private void Start()
     {
-        Destroy(gameObject, 10);
+        Destroy(gameObject, 8);
     }
     public void OnCollisionEnter(Collision collision)
     {

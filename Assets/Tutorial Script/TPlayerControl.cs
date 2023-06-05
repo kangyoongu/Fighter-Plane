@@ -115,12 +115,12 @@ public class TPlayerControl : MonoBehaviour
                 }
                 if (over140 == true)
                 {
-                    if (velocity >= 141)
+                    if (velocity >= 151f)
                     {
                         sonic.Play();
                         StartCoroutine(StartTween());
                     }
-                    else if (velocity >= 134)
+                    else if (velocity >= 138f)
                     {
                         sonic.Stop();
                     }

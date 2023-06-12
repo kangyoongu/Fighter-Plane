@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
+    public GameObject effect;
     private void Start()
     {
         Destroy(gameObject, 8);

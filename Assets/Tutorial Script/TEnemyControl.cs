@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TEnemyControl : MonoBehaviour
@@ -26,7 +25,7 @@ public class TEnemyControl : MonoBehaviour
                 cut = true;
                 Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
                 Destroy(collision.gameObject);
-                FindEnemy.Instance.canShot = false;
+                TFindEnemy.Instance.canShot = false;
                 HitEnemy.Instance.hitEnemy();
                 TutorialManager.Instance.SixSet();
                 if (((1000 - dis) * 0.005f) >= 2)
@@ -43,7 +42,6 @@ public class TEnemyControl : MonoBehaviour
             t.localScale = new Vector3(5, 5, 5);
             Destroy(collision.gameObject);
             HitEnemy.Instance.hitEnemy();
-            ScoreManager.Instance.Score += 7;
             if (damage >= 20)
             {
                 StartCoroutine(Die());

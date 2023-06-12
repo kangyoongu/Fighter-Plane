@@ -1,12 +1,10 @@
 
 using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.VFX;
-using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-using DG.Tweening;
+using UnityEngine.VFX;
 
 public enum State2 : short
 {
@@ -214,11 +212,11 @@ public class PlayerControl : MonoBehaviour
         if (velocity >= 40)
         {
             pitch = -camSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime * 60; // 마우스y값을 지속적으로 받을 변수
-            pitch = Mathf.Clamp(pitch, -1200, 1200);
+            pitch = Mathf.Clamp(pitch, -1000, 1000);
             rigid.AddTorque(dir.right * pitch * turndir);
             if (PlayerPrefs.GetInt("control") == 0) {
                 turn = -camSpeed * Input.GetAxis("Mouse X") * Time.deltaTime * 60; // 마우스로 방향조정
-                turn = Mathf.Clamp(turn, -1200, 1200);
+                turn = Mathf.Clamp(turn, -1000, 1000);
                 rigid.AddTorque(dir.forward * turn);//끝
             }
         }

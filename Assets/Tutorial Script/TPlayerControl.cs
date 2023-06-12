@@ -1,12 +1,11 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.VFX;
-using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-using DG.Tweening;
+using UnityEngine.VFX;
 
 public enum TState : short
 {
@@ -41,7 +40,7 @@ public class TPlayerControl : MonoBehaviour
     public TState playState = TState.GROUND;
     bool canDie = false;
     public GameObject mis;
-    float misTime = 0;
+    float misTime = 100;
     private GameObject g = null;
     public GameObject smoke;
     float power = 1;
@@ -145,12 +144,12 @@ public class TPlayerControl : MonoBehaviour
                     tire.SetBool("IsSky", false);
                 else
                     tire.SetBool("IsSky", true);
-                
 
-                CamTurn();//카메라 회전
+
                 misTime += Time.deltaTime;
                 sTime += Time.deltaTime;
                 flaresTime += Time.deltaTime;
+                CamTurn();//카메라 회전
                 States(); // 상태 판단
             }
         }
@@ -178,7 +177,7 @@ public class TPlayerControl : MonoBehaviour
                 Sky();
                 if (misTime >= 4)
                 {
-                    if (FindEnemy.Instance != null && FindEnemy.Instance.canShot == true)
+                    if (TFindEnemy.Instance != null && TFindEnemy.Instance.canShot == true)
                     {
                         miss.SetBool("Shot", true);
                         misTime = 0;
@@ -220,10 +219,10 @@ public class TPlayerControl : MonoBehaviour
         if (velocity >= 40)
         {
             pitch = -camSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime * 60; // 마우스y값을 지속적으로 받을 변수
-            pitch = Mathf.Clamp(pitch, -1200, 1200);
+            pitch = Mathf.Clamp(pitch, -1000, 1000);
             rigid.AddTorque(dir.right * pitch);
             turn = -camSpeed * Input.GetAxis("Mouse X") * Time.deltaTime * 60; // 마우스로 방향조정
-            turn = Mathf.Clamp(turn, -1200, 1200);
+            turn = Mathf.Clamp(turn, -1000, 1000);
             rigid.AddTorque(dir.forward * turn);//끝
         }
     }
@@ -403,7 +402,7 @@ public class TPlayerControl : MonoBehaviour
             collision.gameObject.GetComponent<EnemyMiss>().DieMis();
             StartCoroutine(Die());
         }
-        if (canDie == true && collision.gameObject.tag != "EnemyBullet" && collision.gameObject.tag != "Enemy")
+        if (canDie == true && collision.gameObject.tag != "EnemyBullet")
         {
             StartCoroutine(Die());
         }

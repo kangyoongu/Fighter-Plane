@@ -10822,20 +10822,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 364260786}
   m_CullTransparentMesh: 1
---- !u!114 &374045990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132149394063477}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f91d9737bce5e494980518f4fd367c93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canShot: 0
-  target: {fileID: 0}
 --- !u!64 &374045991
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11770,7 +11756,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 0d276b3cb1110de4fb3b1a86bdf6bc2f, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 133119abaeb578c4bbf95fd7103f29e0, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 3218dce733b792543986f5da02f3e3ee, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -26049,7 +26035,7 @@ GameObject:
   - component: {fileID: 3469287837318845802}
   - component: {fileID: 1711813855403434400}
   - component: {fileID: 374045991}
-  - component: {fileID: 374045990}
+  - component: {fileID: 3469287837318845803}
   m_Layer: 6
   m_Name: cone (1)
   m_TagString: Untagged
@@ -26984,6 +26970,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149394063477}
   m_Mesh: {fileID: 3613567641014311022, guid: 3bb3ac8e1abbbb341a9767e8fde2bbe8, type: 3}
+--- !u!114 &3469287837318845803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149394063477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bc9c08ac60fc664599e46c64502c63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canShot: 0
+  target: {fileID: 0}
 --- !u!1 &3581537832862202733
 GameObject:
   m_ObjectHideFlags: 0

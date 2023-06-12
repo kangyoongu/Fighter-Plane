@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 public class EnemyMiss : MonoBehaviour
 {
@@ -23,6 +23,7 @@ public class EnemyMiss : MonoBehaviour
         {
             FollowTarget();
             time += Time.deltaTime;
+            print("adfdsfa");
         }
         if (time >= 20)
         {
@@ -48,7 +49,14 @@ public class EnemyMiss : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            PlayerControl.Instance.Die();
+            if (SceneManager.GetActiveScene().name == "Playing")
+            {
+                PlayerControl.Instance.Die();
+            }
+            else
+            {
+                TPlayerControl.Instance.Die();
+            }
             DieMis();
         }
         else

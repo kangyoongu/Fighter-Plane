@@ -84,7 +84,7 @@ public class EnemyContol : MonoBehaviour
                 Destroy(Instantiate(exp, collision.transform.position, Quaternion.identity), 7);
                 Destroy(collision.gameObject);
                 FindEnemy.Instance.canShot = false;
-                ScoreManager.Instance.Score += 103;
+                ScoreManager.Instance.Score += 13;
                 HitEnemy.Instance.hitEnemy();
                 if (((1000 - dis) * 0.005f) >= 2)
                 {

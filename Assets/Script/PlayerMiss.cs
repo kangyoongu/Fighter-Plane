@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 public class PlayerMiss : MonoBehaviour
 {
@@ -13,7 +12,14 @@ public class PlayerMiss : MonoBehaviour
     bool isEnd = false;
     private void Start()
     {
-        target = FindEnemy.Instance.target;
+        if (SceneManager.GetActiveScene().name == "Playing")
+        {
+            target = FindEnemy.Instance.target;
+        }
+        else
+        {
+            target = TFindEnemy.Instance.target;
+        }
         Instantiate(mini, Vector3.zero, Quaternion.identity).GetComponent<MiniObjFallow>().target = transform;
         cf = GetComponent<ConstantForce>();
     }

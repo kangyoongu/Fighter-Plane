@@ -454,7 +454,7 @@ public class TPlayerControl : MonoBehaviour
                 damage = 0;
                 damagePost.weight = 0;
                 StartCoroutine("ShotBullet");
-                while (smokes != null)
+                while (smokes != null && smokes.Count > 0)
                 {
                     GameObject a = smokes.Pop();
                     Destroy(a);

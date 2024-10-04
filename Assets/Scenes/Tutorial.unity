@@ -5102,7 +5102,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Q, E\uB97C \uB20C\uB7EC \uACE1\uC608\uBE44\uD589\uC744 \uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+  m_text: You can perform aerobatics by pressing Q and E.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 705dc55ca20fc2a4cadda5e6e9805fd7, type: 2}
@@ -10082,7 +10082,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC801\uC5D0\uAC8C \uC8FD\uC9C0 \uC54A\uACE0 \uC801\uC744 \uACA9\uCD94\uD574\uBCF4\uC138\uC694."
+  m_text: Try to shoot down enemies without being killed by them.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -10248,7 +10248,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "C\uB97C \uB204\uB974\uBA74 \uAE09\uC120\uD68C\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+  m_text: You can make a sharp turn by pressing C.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 705dc55ca20fc2a4cadda5e6e9805fd7, type: 2}
@@ -10590,8 +10590,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC774 \uAC8C\uC784\uC774 \uCC98\uC74C\uC774\uC2DC\uAD70\uC694! \uADF8\uB807\uB2E4\uBA74
-    \uAC8C\uC784 \uD50C\uB808\uC774 \uBC29\uBC95\uC744 \uC54C\uB824\uB4DC\uB9AC\uACA0\uC2B5\uB2C8\uB2E4."
+  m_text: 'This is your first time playing this game! Well then,
+
+    let me tell
+    you how to play the game.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -10894,7 +10896,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tap\uC744 \uB20C\uB7EC \uB2E4\uC74C\uC73C\uB85C"
+  m_text: Press Tap to next
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -11029,7 +11031,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tap\uC744 \uB20C\uB7EC \uB2E4\uC74C\uC73C\uB85C"
+  m_text: Press Tap to next
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -11553,7 +11555,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tap\uC744 \uB20C\uB7EC \uB2E4\uC74C\uC73C\uB85C"
+  m_text: Press Tap to next
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -11991,8 +11993,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD6CC\uB96D\uD569\uB2C8\uB2E4! \uC774\uC81C \uC9C4\uC9DC \uAC8C\uC784\uC744
-    \uD558\uB7EC \uAC00\uBD05\uC2DC\uB2E4."
+  m_text: Excellent! Now let's get to the real game.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -12127,9 +12128,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB9C8\uC6B0\uC2A4\uB97C \uC88C, \uC6B0\uB85C \uB4DC\uB798\uADF8\uD558\uBA74
-    \uAE30\uCCB4\uAC00 \uD68C\uC804\uD569\uB2C8\uB2E4.\n\n<size=30>(\uD68C\uC804\uBC29\uBC95\uC740
-    \uC124\uC815\uC5D0\uC11C \uBC14\uAFC0 \uC218 \uC788\uC2B5\uB2C8\uB2E4.)</size>"
+  m_text: 'Dragging the mouse left or right rotates the aircraft.
+
+
+
+    <size=30>(Rotation
+    method can be changed in settings.)</size>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -12483,7 +12487,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBAA9\uC801\uC9C0\uAE4C\uC9C0 \uB3C4\uB2EC\uD558\uC2ED\uC2DC\uC624."
+  m_text: Reach your destination.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 705dc55ca20fc2a4cadda5e6e9805fd7, type: 2}
@@ -12716,7 +12720,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tap\uC744 \uB20C\uB7EC \uB2E4\uC74C\uC73C\uB85C"
+  m_text: Press Tap to next
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -12956,7 +12960,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1107826345}
-  m_LocalRotation: {x: 0.11633307, y: -0.000000017615507, z: 0.0000000020632749, w: 0.9932103}
+  m_LocalRotation: {x: 0.11633307, y: 0.00000001761551, z: -0.0000000020632753, w: 0.9932103}
   m_LocalPosition: {x: 4761, y: 12.104727, z: -78.74001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13022,9 +13026,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD558\uC9C0\uB9CC \uD50C\uB808\uC774\uC5B4\uB3C4 \uC801\uC774 \uC0AC\uC815\uAC70\uB9AC
-    \uC548\uC5D0 \uB4E4\uC5B4\uC624\uBA74 \uC790\uB3D9\uC73C\uB85C \uBBF8\uC0AC\uC77C\uC744
-    \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  m_text: 'However, the player also automatically fires missiles
+
+    when enemies
+    come within range.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -13126,7 +13131,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1194818009}
-  m_LocalRotation: {x: 0.11633307, y: -0.000000017615507, z: 0.0000000020632749, w: 0.9932103}
+  m_LocalRotation: {x: 0.11633307, y: 0.00000001761551, z: -0.0000000020632753, w: 0.9932103}
   m_LocalPosition: {x: 0, y: 1.9500002, z: -8.210003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -18447,8 +18452,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "W, A, S, D\uB97C \uC0AC\uC6A9\uD574\uC11C \uBAA9\uC801\uC9C0\uAE4C\uC9C0
-    \uC774\uB3D9\uD558\uC2ED\uC2DC\uC624."
+  m_text: Use W, A, S, D to move to destination.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 705dc55ca20fc2a4cadda5e6e9805fd7, type: 2}
@@ -18583,8 +18587,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB9C8\uC6B0\uC2A4 \uC88C\uD074\uB9AD\uC744 \uB204\uB974\uBA74 \uCD1D\uC54C\uC744
-    \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  m_text: Press the left mouse button to fire a bullet.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 705dc55ca20fc2a4cadda5e6e9805fd7, type: 2}
@@ -18719,7 +18722,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "F\uB97C \uB204\uB974\uBA74 \uD50C\uB808\uC5B4\uB97C \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  m_text: Press F to fire a flare.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 705dc55ca20fc2a4cadda5e6e9805fd7, type: 2}
@@ -19495,9 +19498,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC774\uC81C \uC774\uB959\uD560 \uC218 \uC788\uB294 \uC18D\uB3C4\uC5D0
-    \uB3C4\uB2EC\uD588\uC2B5\uB2C8\uB2E4.\n\uB9C8\uC6B0\uC2A4\uB97C \uC704\uCABD\uC73C\uB85C
-    \uB4DC\uB798\uADF8\uD558\uBA74 \uC774\uB959\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+  m_text: 'You''ve now reached takeoff speed.
+
+    Drag your mouse upwards to take
+    off.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 705dc55ca20fc2a4cadda5e6e9805fd7, type: 2}
@@ -19677,9 +19681,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC6B0\uC120 \uB545\uC5D0 \uC788\uC744 \uB54C\uB294 \uC774\uB959\uD560
-    \uC218 \uC788\uB294 \uB113\uC740 \uD65C\uC8FC\uB85C\uB85C \uC774\uB3D9\uD574\uC57C
-    \uD569\uB2C8\uB2E4."
+  m_text: 'When on the ground, you need to get to a wide runway
+
+    from which you
+    can take off.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -24804,9 +24809,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD6CC\uB96D\uD569\uB2C8\uB2E4! \uC774\uC81C \uC774\uB959\uC744 \uD574\uBCF4\uC8E0.\nShift+W\uB97C
-    \uB204\uB974\uBA74 \uBD80\uC2A4\uD130\uAC00 \uCF1C\uC9D1\uB2C8\uB2E4. \uBD80\uC2A4\uD130\uB97C
-    \uCF20 \uCC44\uB85C \uD65C\uC8FC\uB85C\uB97C \uB2EC\uB9AC\uC138\uC694."
+  m_text: "\rExcellent! Now let's take off.\r\nPress Shift+W to turn on the booster.
+    Drive down the runway with the booster on."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 705dc55ca20fc2a4cadda5e6e9805fd7, type: 2}
@@ -25193,10 +25197,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC606\uC5D0 \uC801\uC774 \uBCF4\uC774\uB294\uAD70\uC694!\n\uC605\uC740
-    \uD770\uC0C9\uC73C\uB85C \uD45C\uC2DC\uB41C \uC801\uC758 \uC0AC\uC815\uAC70\uB9AC
-    \uC548\uC5D0 \uB4E4\uC5B4\uAC00\uBA74 \uC801\uC774 \uBBF8\uC0AC\uC77C\uACFC \uCD1D\uC54C\uC744
-    \uC3DF\uC544\uBD93\uC2B5\uB2C8\uB2E4."
+  m_text: 'I see an enemy next to you!
+
+    When you enter the enemy''s range, indicated
+    in light white,
+
+    they will rain missiles and bullets at you.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
   m_sharedMaterial: {fileID: 3318312483560368633, guid: 96e35e04fc8033148995e9fee13f7974, type: 2}
@@ -25512,7 +25518,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

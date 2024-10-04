@@ -32,7 +32,8 @@ public class GameManager : MonoBehaviour
         if(PlayerPrefs.GetInt("isUp") == 1)
         {
             anim.SetActive(true);
-            anim.transform.GetChild(0).GetComponent<Image>().sprite = tier[tierManager.tierNum-1];
+            if(tierManager.tierNum != 0)
+                anim.transform.GetChild(0).GetComponent<Image>().sprite = tier[tierManager.tierNum-1];
             anim.transform.GetChild(1).GetComponent<Image>().sprite = tier[tierManager.tierNum];
             PlayerPrefs.SetInt("isUp", 0);
         }

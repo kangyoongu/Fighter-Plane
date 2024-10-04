@@ -23,9 +23,9 @@ public class SettingManager : MonoBehaviour
             Instance = this;
         }
         if (PlayerPrefs.GetInt("control") == 0)
-            conText.text = "마우스로 회전";
+            conText.text = "Rotate with mouse";
         else
-            conText.text = "A, D로 회전";
+            conText.text = "Rotate with A, D";
     }
     public void OnClickTutorial()
     {
@@ -55,12 +55,12 @@ public class SettingManager : MonoBehaviour
         if (PlayerPrefs.GetInt("control") == 1)
         {
             PlayerPrefs.SetInt("control", 0);
-            conText.text = "마우스로 회전";
+            conText.text = "Rotate with mouse";
         }
         else
         {
             PlayerPrefs.SetInt("control", 1);
-            conText.text = "A, D로 회전";
+            conText.text = "Rotate with A, D";
         }
         print(PlayerPrefs.GetInt("control"));
     }
